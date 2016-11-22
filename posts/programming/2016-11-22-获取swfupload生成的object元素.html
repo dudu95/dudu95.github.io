@@ -87,10 +87,10 @@
 <meta name="description" content="需求：给swfupload插件生成的object元素添加点击事件Ques：怎样在loaded_handler方法里获取到object生成的flash元素？由于flash的特殊性$(this)生成的jquery对象根本获取不到object元素于是想到试一试DOM元素看能不能获取到它将$(this).get(0)添加监听后可看到该DOM对象有一个特殊的movieElement属性最后通过$(this)">
 <meta property="og:type" content="article">
 <meta property="og:title" content="获取swfupload生成的object元素">
-<meta property="og:url" content="http://yoursite.com/posts/uncategorized/2016-11-22-获取swfupload生成的object元素.html">
+<meta property="og:url" content="http://yoursite.com/posts/programming/2016-11-22-获取swfupload生成的object元素.html">
 <meta property="og:site_name" content="摆渡人">
 <meta property="og:description" content="需求：给swfupload插件生成的object元素添加点击事件Ques：怎样在loaded_handler方法里获取到object生成的flash元素？由于flash的特殊性$(this)生成的jquery对象根本获取不到object元素于是想到试一试DOM元素看能不能获取到它将$(this).get(0)添加监听后可看到该DOM对象有一个特殊的movieElement属性最后通过$(this)">
-<meta property="og:updated_time" content="2016-11-22T08:53:25.610Z">
+<meta property="og:updated_time" content="2016-11-22T09:14:38.428Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="获取swfupload生成的object元素">
 <meta name="twitter:description" content="需求：给swfupload插件生成的object元素添加点击事件Ques：怎样在loaded_handler方法里获取到object生成的flash元素？由于flash的特殊性$(this)生成的jquery对象根本获取不到object元素于是想到试一试DOM元素看能不能获取到它将$(this).get(0)添加监听后可看到该DOM对象有一个特殊的movieElement属性最后通过$(this)">
@@ -121,7 +121,7 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/posts/uncategorized/2016-11-22-获取swfupload生成的object元素.html"/>
+  <link rel="canonical" href="http://yoursite.com/posts/programming/2016-11-22-获取swfupload生成的object元素.html"/>
 
 
 
@@ -238,7 +238,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/posts/uncategorized/2016-11-22-获取swfupload生成的object元素.html">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/posts/programming/2016-11-22-获取swfupload生成的object元素.html">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
     <meta itemprop="name" content="Chunxia Du">
@@ -312,7 +312,7 @@
 
       
         <h1 id="需求：给swfupload插件生成的object元素添加点击事件"><a href="#需求：给swfupload插件生成的object元素添加点击事件" class="headerlink" title="需求：给swfupload插件生成的object元素添加点击事件"></a>需求：给swfupload插件生成的object元素添加点击事件</h1><h2 id="Ques：怎样在loaded-handler方法里获取到object生成的flash元素？"><a href="#Ques：怎样在loaded-handler方法里获取到object生成的flash元素？" class="headerlink" title="Ques：怎样在loaded_handler方法里获取到object生成的flash元素？"></a>Ques：怎样在loaded_handler方法里获取到object生成的flash元素？</h2><p>由于flash的特殊性<br>$(this)生成的jquery对象根本获取不到object元素<br>于是想到试一试DOM元素看能不能获取到它<br>将$(this).get(0)添加监听后可看到该<strong>DOM对象</strong>有一个特殊的<strong>movieElement</strong>属性<br>最后通过<code>$(this).get(0).movieElement</code>获取到swfupload动态生成的object对象</p>
-<h2 id="Ques：现在问题来了，我想给该object对象添加点击事件怎么办？"><a href="#Ques：现在问题来了，我想给该object对象添加点击事件怎么办？" class="headerlink" title="Ques：现在问题来了，我想给该object对象添加点击事件怎么办？"></a>Ques：现在问题来了，我想给该object对象添加点击事件怎么办？</h2><p>首先想到肯定是给object添加点击事件嘛，so easy！<br>但是在Chrome中 embed是<strong>不支持onclick</strong>，但支持onmouseover，onmousedown，onmouseup<br>所以问题就转换成了给该对象添加一个onmousedown事件，<br><figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">swfupload_loaded_handler:function()&#123;</div><div class="line">                    $(this).get(<span class="number">0</span>).movieElement.addEventListener(<span class="string">"mousedown"</span>,function()&#123;</div><div class="line">                        //具体的处理逻辑</div><div class="line">                    &#125;)</div><div class="line"> &#125;</div></pre></td></tr></table></figure></p>
+<h2 id="Ques：现在问题来了，我想给该object对象添加点击事件怎么办？"><a href="#Ques：现在问题来了，我想给该object对象添加点击事件怎么办？" class="headerlink" title="Ques：现在问题来了，我想给该object对象添加点击事件怎么办？"></a>Ques：现在问题来了，我想给该object对象添加点击事件怎么办？</h2><p>首先想到肯定是给object添加点击事件嘛，so easy！<br>但是在Chrome中 embed是<strong>不支持onclick</strong>，但支持onmouseover，onmousedown，onmouseup<br>所以问题就转换成了给该对象添加一个onmousedown事件，<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">swfupload_loaded_handler:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">                    $(<span class="keyword">this</span>).get(<span class="number">0</span>).movieElement.addEventListener(<span class="string">"mousedown"</span>,<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">                        <span class="comment">//具体的处理逻辑</span></div><div class="line">                    &#125;)</div><div class="line"> &#125;</div></pre></td></tr></table></figure></p>
 <p>当然你也可以模拟一个点击事件<br>具体代码可以参考：<a href="http://blog.csdn.net/hhy_huang/article/details/7411919" target="_blank" rel="external">模拟点击事件</a></p>
 
       
@@ -346,7 +346,7 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/posts/uncategorized/2016-11-22-hello-world.html" rel="next" title="Hello World">
+              <a href="/posts/programming/2016-11-22-hello-world.html" rel="next" title="Hello World">
                 <i class="fa fa-chevron-left"></i> Hello World
               </a>
             
