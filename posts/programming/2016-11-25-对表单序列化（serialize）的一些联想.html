@@ -1,0 +1,677 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="programming," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="表单序列化jQuery有两个方法 .serializeArray() 与.serialize().
+.serializeArray()返回: Array描述: 将用作提交的表单元素的值编译成拥有name和value对象组成的数组。如[ { name: a  value: 1 }, { name: b  value: 2 },…]一般用于Ajax POST
+
+.serialize()返回: Stri">
+<meta property="og:type" content="article">
+<meta property="og:title" content="对表单序列化（serialize）的一些联想">
+<meta property="og:url" content="http://yoursite.com/posts/programming/2016-11-25-对表单序列化（serialize）的一些联想.html">
+<meta property="og:site_name" content="摆渡人">
+<meta property="og:description" content="表单序列化jQuery有两个方法 .serializeArray() 与.serialize().
+.serializeArray()返回: Array描述: 将用作提交的表单元素的值编译成拥有name和value对象组成的数组。如[ { name: a  value: 1 }, { name: b  value: 2 },…]一般用于Ajax POST
+
+.serialize()返回: Stri">
+<meta property="og:image" content="http://oh2pz5yqj.bkt.clouddn.com/image/serialize/serializeArrayUI.png">
+<meta property="og:image" content="http://oh2pz5yqj.bkt.clouddn.com/image/serialize/serializeArrayResult.png">
+<meta property="og:image" content="http://oh2pz5yqj.bkt.clouddn.com/image/serialize/%E5%B0%81%E8%A3%85serializeUI.png">
+<meta property="og:image" content="http://oh2pz5yqj.bkt.clouddn.com/image/serialize/%E5%B0%81%E8%A3%85serializeResult.png">
+<meta property="og:image" content="http://oh2pz5yqj.bkt.clouddn.com/image/serialize/nodejsQuerystring.png">
+<meta property="og:updated_time" content="2016-11-25T04:10:20.427Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="对表单序列化（serialize）的一些联想">
+<meta name="twitter:description" content="表单序列化jQuery有两个方法 .serializeArray() 与.serialize().
+.serializeArray()返回: Array描述: 将用作提交的表单元素的值编译成拥有name和value对象组成的数组。如[ { name: a  value: 1 }, { name: b  value: 2 },…]一般用于Ajax POST
+
+.serialize()返回: Stri">
+<meta name="twitter:image" content="http://oh2pz5yqj.bkt.clouddn.com/image/serialize/serializeArrayUI.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/posts/programming/2016-11-25-对表单序列化（serialize）的一些联想.html"/>
+
+
+
+
+
+  <title> 对表单序列化（serialize）的一些联想 | 摆渡人 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">摆渡人</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">与你同行的人，比你要抵达的地方更重要。</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/posts/programming/2016-11-25-对表单序列化（serialize）的一些联想.html">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Chunxia Du">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.JPG">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="摆渡人">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="摆渡人" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                对表单序列化（serialize）的一些联想
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-11-25T11:01:03+08:00">
+                2016-11-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/programming/" itemprop="url" rel="index">
+                    <span itemprop="name">编程</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="表单序列化"><a href="#表单序列化" class="headerlink" title="表单序列化"></a>表单序列化</h2><h3 id="jQuery有两个方法-serializeArray-与-serialize"><a href="#jQuery有两个方法-serializeArray-与-serialize" class="headerlink" title="jQuery有两个方法 .serializeArray() 与.serialize()."></a>jQuery有两个方法 .serializeArray() 与.serialize().</h3><ul>
+<li><h4 id="serializeArray-返回-Array"><a href="#serializeArray-返回-Array" class="headerlink" title=".serializeArray()返回: Array"></a>.serializeArray()返回: Array</h4><p><strong>描述:</strong> 将用作提交的表单元素的值编译成<strong>拥有name和value对象组成的数组</strong>。<br>如<strong><code>[ { name: a  value: 1 }, { name: b  value: 2 },…]</code></strong><br>一般用于Ajax <strong>POST</strong></p>
+</li>
+<li><h4 id="serialize-返回-String"><a href="#serialize-返回-String" class="headerlink" title=".serialize()返回: String"></a>.serialize()返回: String</h4><p><strong>描述：</strong> 将用作提交的表单元素的值编译成<strong>字符串</strong>。<br>如：<strong><code>single=Single&amp;multiple=Multiple1&amp;multiple=Multiple3&amp;check=check2&amp;radio=radio1</code></strong><br>一般用于<strong>GET</strong></p>
+</li>
+</ul>
+<h3 id="具体讨论serializeArray-与serialize-如下："><a href="#具体讨论serializeArray-与serialize-如下：" class="headerlink" title="具体讨论serializeArray()与serialize()如下："></a>具体讨论serializeArray()与serialize()如下：</h3><h4 id="1-对于简单的表单提交（不涉及到checkbox，select等），用serialize-问题不大"><a href="#1-对于简单的表单提交（不涉及到checkbox，select等），用serialize-问题不大" class="headerlink" title="1. 对于简单的表单提交（不涉及到checkbox，select等），用serialize()问题不大"></a>1. 对于简单的表单提交<strong>（不涉及到checkbox，select等）</strong>，用serialize()问题不大</h4><p>这时，序列化和反序列化都很简单<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">**<span class="comment">//序列化**</span></div><div class="line"><span class="keyword">var</span> data = $(<span class="string">'#form'</span>).serialize();</div><div class="line"><span class="built_in">console</span>.log(data)<span class="comment">//=&gt; 'name=val&amp;age=val&amp;gender=val&amp;fruit=apple&amp;fruit=banana'</span></div><div class="line"> </div><div class="line">**<span class="comment">//反序列化**</span></div><div class="line"><span class="keyword">var</span> data = <span class="string">'name=val&amp;age=val&amp;gender=val&amp;fruit=apple&amp;fruit=banana'</span>;</div><div class="line">data.split(<span class="string">'&amp;'</span>).forEach(<span class="function"><span class="keyword">function</span>(<span class="params">param</span>)</span>&#123;</div><div class="line">  param = param.split(<span class="string">'='</span>);</div><div class="line">  <span class="keyword">var</span> name = param[<span class="number">0</span>],</div><div class="line">      value = param[<span class="number">1</span>];</div><div class="line">  $(<span class="string">'#form [name='</span> + name + <span class="string">']'</span>).val(value);</div><div class="line">&#125;)</div></pre></td></tr></table></figure></p>
+<h4 id="2-但是如果表单在有多选的情况下，serialize-和serializeArray-显然都会出现问题"><a href="#2-但是如果表单在有多选的情况下，serialize-和serializeArray-显然都会出现问题" class="headerlink" title="2. 但是如果表单在有多选的情况下，serialize()和serializeArray()显然都会出现问题"></a>2. 但是如果表单在有多选的情况下，serialize()和serializeArray()显然都会出现问题</h4><ul>
+<li><h5 id="对于serialize-思路是对name相同的情况进行相应的判断，这里不细论；"><a href="#对于serialize-思路是对name相同的情况进行相应的判断，这里不细论；" class="headerlink" title="对于serialize(),思路是对name相同的情况进行相应的判断，这里不细论；"></a>对于serialize(),思路是对name相同的情况进行相应的判断，这里不细论；</h5></li>
+<li><h5 id="对于serializeArray-方法"><a href="#对于serializeArray-方法" class="headerlink" title="对于serializeArray()方法"></a>对于serializeArray()方法</h5>比如<strong>select,checkbox。</strong>此时返回的是：<br><strong><code>[{multiple:Multiple1},{multiple:Multiple3},{check:check1}},{check:check2}]</code></strong><br>而我们期望的是：<br><strong><code>[{multiple:[Multiple,Multiple3]},{check:[check1,check2]}]</code></strong><br>而且我们通过ajax提交的请求数据根对象期望是<strong>json对象</strong>而不是直接的<strong>json数组</strong>。</li>
+</ul>
+<p>这时，可以对serializeArray()进行一个简单的封装<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> serialize = <span class="function"><span class="keyword">function</span>(<span class="params">form</span>)</span>&#123;</div><div class="line">    <span class="keyword">var</span> $form = (<span class="keyword">typeof</span>(form)==<span class="string">"string"</span> ? $(<span class="string">"#"</span>+form) : form);</div><div class="line">    <span class="keyword">var</span> dataArray =  $form.serializeArray();</div><div class="line">    <span class="keyword">var</span> result=&#123;&#125;;</div><div class="line">    $(dataArray).each(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">        <span class="comment">//如果在结果对象中存在这个值，那么就说明是多选的情形。</span></div><div class="line">        <span class="keyword">if</span>(result[<span class="keyword">this</span>.name])&#123;</div><div class="line">            <span class="comment">//多选的情形，值是数组，直接push</span></div><div class="line">            result[<span class="keyword">this</span>.name].push(<span class="keyword">this</span>.value);</div><div class="line">        &#125;<span class="keyword">else</span>&#123;</div><div class="line">            <span class="comment">//获取当前表单控件元素</span></div><div class="line">            <span class="keyword">var</span> element = $form.find(<span class="string">"[name='"</span>+ <span class="keyword">this</span>.name +<span class="string">"']"</span>)[<span class="number">0</span>];</div><div class="line">            <span class="comment">//获取当前控件类型</span></div><div class="line">            <span class="keyword">var</span> type = ( element.type || element.nodeName ).toLowerCase();</div><div class="line">            <span class="comment">//如果控件类型为多选那么值就是数组形式，否则就是单值形式。</span></div><div class="line">            result[<span class="keyword">this</span>.name] = (<span class="regexp">/^(select-multiple|checkbox)$/i</span>).test(type) ? [<span class="keyword">this</span>.value] : <span class="keyword">this</span>.value;</div><div class="line">          &#125;</div><div class="line">    &#125;);</div><div class="line">    <span class="keyword">return</span> result;</div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
+<h4 id="结果对比："><a href="#结果对比：" class="headerlink" title="结果对比："></a>结果对比：</h4><h5 id="serializeArray的输入界面："><a href="#serializeArray的输入界面：" class="headerlink" title="serializeArray的输入界面："></a>serializeArray的输入界面：</h5><p><img src="http://oh2pz5yqj.bkt.clouddn.com/image/serialize/serializeArrayUI.png" alt="serializeArray的输入界面"></p>
+<h5 id="serializeArray的输出效果："><a href="#serializeArray的输出效果：" class="headerlink" title="serializeArray的输出效果："></a>serializeArray的输出效果：</h5><p><img src="http://oh2pz5yqj.bkt.clouddn.com/image/serialize/serializeArrayResult.png" alt="serializeArray的输出效果"></p>
+<h5 id="封装的serialize输入界面："><a href="#封装的serialize输入界面：" class="headerlink" title="封装的serialize输入界面："></a>封装的serialize输入界面：</h5><p><img src="http://oh2pz5yqj.bkt.clouddn.com/image/serialize/%E5%B0%81%E8%A3%85serializeUI.png" alt="封装的serialize输入界面"></p>
+<h5 id="封装的serialize输出效果："><a href="#封装的serialize输出效果：" class="headerlink" title="封装的serialize输出效果："></a>封装的serialize输出效果：</h5><p><img src="http://oh2pz5yqj.bkt.clouddn.com/image/serialize/%E5%B0%81%E8%A3%85serializeResult.png" alt="封装的serialize输出效果"></p>
+<h2 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h2><h3 id="nodejs中的序列化与反序列化"><a href="#nodejs中的序列化与反序列化" class="headerlink" title="nodejs中的序列化与反序列化"></a>nodejs中的序列化与反序列化</h3><p><img src="http://oh2pz5yqj.bkt.clouddn.com/image/serialize/nodejsQuerystring.png" alt="nodejs中的序列化与反序列化"></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/programming/" rel="tag"># programming</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/posts/programming/2016-11-24-一个简单的使用ajax请求的前后端实现.html" rel="next" title="一个简单的使用ajax请求的前后端实现">
+                <i class="fa fa-chevron-left"></i> 一个简单的使用ajax请求的前后端实现
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.JPG"
+               alt="Chunxia Du" />
+          <p class="site-author-name" itemprop="name">Chunxia Du</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">5</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#表单序列化"><span class="nav-number">1.</span> <span class="nav-text">表单序列化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#jQuery有两个方法-serializeArray-与-serialize"><span class="nav-number">1.1.</span> <span class="nav-text">jQuery有两个方法 .serializeArray() 与.serialize().</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#serializeArray-返回-Array"><span class="nav-number">1.1.1.</span> <span class="nav-text">.serializeArray()返回: Array</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#serialize-返回-String"><span class="nav-number">1.1.2.</span> <span class="nav-text">.serialize()返回: String</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#具体讨论serializeArray-与serialize-如下："><span class="nav-number">1.2.</span> <span class="nav-text">具体讨论serializeArray()与serialize()如下：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-对于简单的表单提交（不涉及到checkbox，select等），用serialize-问题不大"><span class="nav-number">1.2.1.</span> <span class="nav-text">1. 对于简单的表单提交（不涉及到checkbox，select等），用serialize()问题不大</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-但是如果表单在有多选的情况下，serialize-和serializeArray-显然都会出现问题"><span class="nav-number">1.2.2.</span> <span class="nav-text">2. 但是如果表单在有多选的情况下，serialize()和serializeArray()显然都会出现问题</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#对于serialize-思路是对name相同的情况进行相应的判断，这里不细论；"><span class="nav-number">1.2.2.1.</span> <span class="nav-text">对于serialize(),思路是对name相同的情况进行相应的判断，这里不细论；</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#对于serializeArray-方法"><span class="nav-number">1.2.2.2.</span> <span class="nav-text">对于serializeArray()方法</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#结果对比："><span class="nav-number">1.2.3.</span> <span class="nav-text">结果对比：</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#serializeArray的输入界面："><span class="nav-number">1.2.3.1.</span> <span class="nav-text">serializeArray的输入界面：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#serializeArray的输出效果："><span class="nav-number">1.2.3.2.</span> <span class="nav-text">serializeArray的输出效果：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#封装的serialize输入界面："><span class="nav-number">1.2.3.3.</span> <span class="nav-text">封装的serialize输入界面：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#封装的serialize输出效果："><span class="nav-number">1.2.3.4.</span> <span class="nav-text">封装的serialize输出效果：</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#附录"><span class="nav-number">2.</span> <span class="nav-text">附录</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#nodejs中的序列化与反序列化"><span class="nav-number">2.1.</span> <span class="nav-text">nodejs中的序列化与反序列化</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chunxia Du</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
