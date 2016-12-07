@@ -1,0 +1,727 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="programming," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="该文章转载自阮一峰的jquery设计思想，原文链接请戳这儿~
+【目录】
+一、选择网页元素
+二、改变结果集
+三、链式操作
+四、元素的操作：取值和赋值
+五、元素的操作：移动
+六、元素的操作：复制、删除和创建
+七、工具方法
+八、事件操作
+九、特殊效果
+
+【正文】一、选择网页元素jQuery的基本设计思想和主要用法，就是”选择某个网页元素，然后对其进行某种操作”。这是它区别于其他Javascript库的根">
+<meta property="og:type" content="article">
+<meta property="og:title" content="jquery的设计思想">
+<meta property="og:url" content="http://yoursite.com/posts/programming/2016-12-07-jquery的设计思想.html">
+<meta property="og:site_name" content="摆渡人">
+<meta property="og:description" content="该文章转载自阮一峰的jquery设计思想，原文链接请戳这儿~
+【目录】
+一、选择网页元素
+二、改变结果集
+三、链式操作
+四、元素的操作：取值和赋值
+五、元素的操作：移动
+六、元素的操作：复制、删除和创建
+七、工具方法
+八、事件操作
+九、特殊效果
+
+【正文】一、选择网页元素jQuery的基本设计思想和主要用法，就是”选择某个网页元素，然后对其进行某种操作”。这是它区别于其他Javascript库的根">
+<meta property="og:updated_time" content="2016-12-07T03:24:12.937Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="jquery的设计思想">
+<meta name="twitter:description" content="该文章转载自阮一峰的jquery设计思想，原文链接请戳这儿~
+【目录】
+一、选择网页元素
+二、改变结果集
+三、链式操作
+四、元素的操作：取值和赋值
+五、元素的操作：移动
+六、元素的操作：复制、删除和创建
+七、工具方法
+八、事件操作
+九、特殊效果
+
+【正文】一、选择网页元素jQuery的基本设计思想和主要用法，就是”选择某个网页元素，然后对其进行某种操作”。这是它区别于其他Javascript库的根">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/posts/programming/2016-12-07-jquery的设计思想.html"/>
+
+
+
+
+
+  <title> jquery的设计思想 | 摆渡人 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">摆渡人</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">与你同行的人，比你要抵达的地方更重要。</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/posts/programming/2016-12-07-jquery的设计思想.html">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Chunxia Du">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.JPG">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="摆渡人">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="摆渡人" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                jquery的设计思想
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-12-07T09:53:34+08:00">
+                2016-12-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/programming/" itemprop="url" rel="index">
+                    <span itemprop="name">编程</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><strong>该文章转载自阮一峰的jquery设计思想，<a href="http://www.ruanyifeng.com/blog/2011/07/jquery_fundamentals.html" target="_blank" rel="external">原文链接请戳这儿~</a></strong></p>
+<h2 id="【目录】"><a href="#【目录】" class="headerlink" title="【目录】"></a>【目录】</h2><ul>
+<li>一、选择网页元素</li>
+<li>二、改变结果集</li>
+<li>三、链式操作</li>
+<li>四、元素的操作：取值和赋值</li>
+<li>五、元素的操作：移动</li>
+<li>六、元素的操作：复制、删除和创建</li>
+<li>七、工具方法</li>
+<li>八、事件操作</li>
+<li>九、特殊效果</li>
+</ul>
+<h2 id="【正文】"><a href="#【正文】" class="headerlink" title="【正文】"></a>【正文】</h2><h3 id="一、选择网页元素"><a href="#一、选择网页元素" class="headerlink" title="一、选择网页元素"></a>一、选择网页元素</h3><h4 id="jQuery的基本设计思想和主要用法，就是”选择某个网页元素，然后对其进行某种操作”。这是它区别于其他Javascript库的根本特点。"><a href="#jQuery的基本设计思想和主要用法，就是”选择某个网页元素，然后对其进行某种操作”。这是它区别于其他Javascript库的根本特点。" class="headerlink" title="jQuery的基本设计思想和主要用法，就是”选择某个网页元素，然后对其进行某种操作”。这是它区别于其他Javascript库的根本特点。"></a>jQuery的基本设计思想和主要用法，就是”选择某个网页元素，然后对其进行某种操作”。这是它区别于其他Javascript库的根本特点。</h4><p>使用jQuery的第一步，往往就是将一个选择表达式，放进构造函数jQuery()（简写为$），然后得到被选中的元素。<br><strong>选择表达式可以是CSS选择器：</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$(document) //选择整个文档对象</div><div class="line">$(&apos;#myId&apos;) //选择ID为myId的网页元素</div><div class="line">$(&apos;div.myClass&apos;) // 选择class为myClass的div元素</div><div class="line">$(&apos;input[name=first]&apos;) // 选择name属性等于first的input元素</div></pre></td></tr></table></figure></p>
+<p><strong>也可以是jQuery特有的表达式：</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">$(&apos;a:first&apos;) //选择网页中第一个a元素</div><div class="line">$(&apos;tr:odd&apos;) //选择表格的奇数行</div><div class="line">$(&apos;#myForm :input&apos;) // 选择表单中的input元素</div><div class="line">$(&apos;div:visible&apos;) //选择可见的div元素</div><div class="line">$(&apos;div:gt(2)&apos;) // 选择所有的div元素，除了前三个</div><div class="line">$(&apos;div:animated&apos;) // 选择当前处于动画状态的div元素</div></pre></td></tr></table></figure></p>
+<h3 id="二、改变结果集"><a href="#二、改变结果集" class="headerlink" title="二、改变结果集"></a>二、改变结果集</h3><h4 id="jQuery设计思想之二，就是提供各种强大的过滤器，对结果集进行筛选，缩小选择结果。"><a href="#jQuery设计思想之二，就是提供各种强大的过滤器，对结果集进行筛选，缩小选择结果。" class="headerlink" title="jQuery设计思想之二，就是提供各种强大的过滤器，对结果集进行筛选，缩小选择结果。"></a>jQuery设计思想之二，就是提供各种强大的过滤器，对结果集进行筛选，缩小选择结果。</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$(&apos;div&apos;).has(&apos;p&apos;); // 选择包含p元素的div元素</div><div class="line">$(&apos;div&apos;).not(&apos;.myClass&apos;); //选择class不等于myClass的div元素</div><div class="line">$(&apos;div&apos;).filter(&apos;.myClass&apos;); //选择class等于myClass的div元素</div><div class="line">$(&apos;div&apos;).first(); //选择第1个div元素</div><div class="line">$(&apos;div&apos;).eq(5); //选择第6个div元素</div></pre></td></tr></table></figure>
+<p><strong>有时候，我们需要从结果集出发，移动到附近的相关元素，jQuery也提供了在DOM树上的移动方法：</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$(&apos;div&apos;).next(&apos;p&apos;); //选择div元素后面的第一个p元素</div><div class="line">$(&apos;div&apos;).parent(); //选择div元素的父元素</div><div class="line">$(&apos;div&apos;).closest(&apos;form&apos;); //选择离div最近的那个form父元素</div><div class="line">$(&apos;div&apos;).children(); //选择div的所有子元素</div><div class="line">$(&apos;div&apos;).siblings(); //选择div的同级元素</div></pre></td></tr></table></figure></p>
+<h3 id="三、链式操作"><a href="#三、链式操作" class="headerlink" title="三、链式操作"></a>三、链式操作</h3><h4 id="jQuery设计思想之三，就是最终选中网页元素以后，可以对它进行一系列操作，并且所有操作可以连接在一起，以链条的形式写出来，比如："><a href="#jQuery设计思想之三，就是最终选中网页元素以后，可以对它进行一系列操作，并且所有操作可以连接在一起，以链条的形式写出来，比如：" class="headerlink" title="jQuery设计思想之三，就是最终选中网页元素以后，可以对它进行一系列操作，并且所有操作可以连接在一起，以链条的形式写出来，比如："></a>jQuery设计思想之三，就是最终选中网页元素以后，可以对它进行一系列操作，并且所有操作可以连接在一起，以链条的形式写出来，比如：</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$(&apos;div&apos;).find(&apos;h3&apos;).eq(2).html(&apos;Hello&apos;);</div></pre></td></tr></table></figure>
+<p>分解开来，就是下面这样：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$(&apos;div&apos;) //找到div元素</div><div class="line">　.find(&apos;h3&apos;) //选择其中的h3元素</div><div class="line">　.eq(2) //选择第3个h3元素</div><div class="line">　.html(&apos;Hello&apos;); //将它的内容改为Hello</div></pre></td></tr></table></figure></p>
+<p>这是jQuery最令人称道、最方便的特点。<br><strong>它的原理在于每一步的jQuery操作，返回的都是一个jQuery对象，所以不同操作可以连在一起。</strong></p>
+<p><strong>jQuery还提供了.end()方法，使得结果集可以后退一步：</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">$(&apos;div&apos;)</div><div class="line">　.find(&apos;h3&apos;)</div><div class="line">　.eq(2)</div><div class="line">　.html(&apos;Hello&apos;)</div><div class="line">　.end() //退回到选中所有的h3元素的那一步</div><div class="line">　.eq(0) //选中第一个h3元素</div><div class="line">　.html(&apos;World&apos;); //将它的内容改为World</div></pre></td></tr></table></figure></p>
+<h3 id="四、元素的操作：取值和赋值"><a href="#四、元素的操作：取值和赋值" class="headerlink" title="四、元素的操作：取值和赋值"></a>四、元素的操作：取值和赋值</h3><p>操作网页元素，最常见的需求是取得它们的值，或者对它们进行赋值。</p>
+<h4 id="jQuery设计思想之四，就是使用同一个函数，来完成取值（getter）和赋值（setter），即”取值器”与”赋值器”合一。到底是取值还是赋值，由函数的参数决定。"><a href="#jQuery设计思想之四，就是使用同一个函数，来完成取值（getter）和赋值（setter），即”取值器”与”赋值器”合一。到底是取值还是赋值，由函数的参数决定。" class="headerlink" title="jQuery设计思想之四，就是使用同一个函数，来完成取值（getter）和赋值（setter），即”取值器”与”赋值器”合一。到底是取值还是赋值，由函数的参数决定。"></a>jQuery设计思想之四，就是使用同一个函数，来完成取值（getter）和赋值（setter），即”取值器”与”赋值器”合一。到底是取值还是赋值，由函数的参数决定。</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$(&apos;h1&apos;).html(); //html()没有参数，表示取出h1的值</div><div class="line">$(&apos;h1&apos;).html(&apos;Hello&apos;); //html()有参数Hello，表示对h1进行赋值</div></pre></td></tr></table></figure>
+<p>常见的取值和赋值函数如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">.html() 取出或设置html内容</div><div class="line">.text() 取出或设置text内容</div><div class="line">.attr() 取出或设置某个属性的值</div><div class="line">.width() 取出或设置某个元素的宽度</div><div class="line">.height() 取出或设置某个元素的高度</div><div class="line">.val() 取出某个表单元素的值</div></pre></td></tr></table></figure></p>
+<p>需要注意的是，<strong>如果结果集包含多个元素，那么赋值的时候，将对其中所有的元素赋值；取值的时候，则是只取出第一个元素的值（.text()例外，它取出所有元素的text内容）。</strong></p>
+<h3 id="五、元素的操作：移动"><a href="#五、元素的操作：移动" class="headerlink" title="五、元素的操作：移动"></a>五、元素的操作：移动</h3><h4 id="jQuery设计思想之五，就是提供两组方法，来操作元素在网页中的位置移动。一组方法是直接移动该元素，另一组方法是移动其他元素，使得目标元素达到我们想要的位置。"><a href="#jQuery设计思想之五，就是提供两组方法，来操作元素在网页中的位置移动。一组方法是直接移动该元素，另一组方法是移动其他元素，使得目标元素达到我们想要的位置。" class="headerlink" title="jQuery设计思想之五，就是提供两组方法，来操作元素在网页中的位置移动。一组方法是直接移动该元素，另一组方法是移动其他元素，使得目标元素达到我们想要的位置。"></a>jQuery设计思想之五，就是提供两组方法，来操作元素在网页中的位置移动。一组方法是直接移动该元素，另一组方法是移动其他元素，使得目标元素达到我们想要的位置。</h4><p>假定我们选中了一个div元素，需要把它移动到p元素后面。<br><strong>第一种方法是使用.insertAfter()，把div元素移动p元素后面：</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$(&apos;div&apos;).insertAfter($(&apos;p&apos;));</div></pre></td></tr></table></figure></p>
+<p><strong>第二种方法是使用.after()，把p元素加到div元素前面：</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$(&apos;p&apos;).after($(&apos;div&apos;));</div></pre></td></tr></table></figure></p>
+<p>表面上看，这两种方法的效果是一样的，唯一的不同似乎只是操作视角的不同。但是<strong>实际上，它们有一个重大差别，那就是返回的元素不一样。第一种方法返回div元素，第二种方法返回p元素。</strong>你可以根据需要，选择到底使用哪一种方法。</p>
+<p>使用这种模式的操作方法，一共有四对：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">.insertAfter()和.after()：在现存元素的外部，从后面插入元素</div><div class="line">.insertBefore()和.before()：在现存元素的外部，从前面插入元素</div><div class="line">.appendTo()和.append()：在现存元素的内部，从后面插入元素</div><div class="line">.prependTo()和.prepend()：在现存元素的内部，从前面插入元素</div></pre></td></tr></table></figure></p>
+<h3 id="六、元素的操作：复制、删除和创建"><a href="#六、元素的操作：复制、删除和创建" class="headerlink" title="六、元素的操作：复制、删除和创建"></a>六、元素的操作：复制、删除和创建</h3><p>除了元素的位置移动之外，jQuery还提供其他几种操作元素的重要方法。<br><strong>复制元素使用.clone()。</strong><br><strong>删除元素使用.remove()和.detach()。</strong><br>两者的区别在于<br><strong>前者不保留被删除元素的事件，后者保留，有利于重新插入文档时使用。</strong><br><strong>清空元素内容（但是不删除该元素）使用.empty()。</strong></p>
+<p><strong>创建新元素</strong>的方法非常简单，只要把新元素直接传入jQuery的构造函数就行了：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$(&apos;&lt;p&gt;Hello&lt;/p&gt;&apos;);</div><div class="line">$(&apos;&lt;li class=&quot;new&quot;&gt;new list item&lt;/li&gt;&apos;);</div><div class="line">$(&apos;ul&apos;).append(&apos;&lt;li&gt;list item&lt;/li&gt;&apos;);</div></pre></td></tr></table></figure></p>
+<h3 id="七、工具方法"><a href="#七、工具方法" class="headerlink" title="七、工具方法"></a>七、工具方法</h3><h4 id="jQuery设计思想之六：除了对选中的元素进行操作以外，还提供一些与元素无关的工具方法（utility）。不必选中元素，就可以直接使用这些方法。"><a href="#jQuery设计思想之六：除了对选中的元素进行操作以外，还提供一些与元素无关的工具方法（utility）。不必选中元素，就可以直接使用这些方法。" class="headerlink" title="jQuery设计思想之六：除了对选中的元素进行操作以外，还提供一些与元素无关的工具方法（utility）。不必选中元素，就可以直接使用这些方法。"></a>jQuery设计思想之六：除了对选中的元素进行操作以外，还提供一些与元素无关的工具方法（utility）。不必选中元素，就可以直接使用这些方法。</h4><p><strong>如果你懂得Javascript语言的继承原理，那么就能理解工具方法的实质。它是定义在jQuery构造函数上的方法，即jQuery.method()，所以可以直接使用。而那些操作元素的方法，是定义在构造函数的prototype对象上的方法，即jQuery.prototype.method()，所以必须生成实例（即选中元素）后使用。</strong>如果不理解这种区别，问题也不大，只要把工具方法理解成，是像javascript原生函数那样，可以直接使用的方法就行了。</p>
+<p>常用的工具方法有以下几种：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">$.trim() 去除字符串两端的空格。</div><div class="line">$.each() 遍历一个数组或对象。</div><div class="line">$.inArray() 返回一个值在数组中的索引位置。如果该值不在数组中，则返回-1。</div><div class="line">$.grep() 返回数组中符合某种标准的元素。</div><div class="line">$.extend() 将多个对象，合并到第一个对象。</div><div class="line">$.makeArray() 将对象转化为数组。</div><div class="line">$.type() 判断对象的类别（函数对象、日期对象、数组对象、正则对象等等）。</div><div class="line">$.isArray() 判断某个参数是否为数组。</div><div class="line">$.isEmptyObject() 判断某个对象是否为空（不含有任何属性）。</div><div class="line">$.isFunction() 判断某个参数是否为函数。</div><div class="line">$.isPlainObject() 判断某个参数是否为用&quot;&#123;&#125;&quot;或&quot;new Object&quot;建立的对象。</div><div class="line">$.support() 判断浏览器是否支持某个特性。</div></pre></td></tr></table></figure></p>
+<h3 id="八、事件操作"><a href="#八、事件操作" class="headerlink" title="八、事件操作"></a>八、事件操作</h3><h4 id="jQuery设计思想之七，就是把事件直接绑定在网页元素之上。"><a href="#jQuery设计思想之七，就是把事件直接绑定在网页元素之上。" class="headerlink" title="jQuery设计思想之七，就是把事件直接绑定在网页元素之上。"></a>jQuery设计思想之七，就是把事件直接绑定在网页元素之上。</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$(&apos;p&apos;).click(function()&#123;</div><div class="line">　　alert(&apos;Hello&apos;);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>目前，jQuery主要支持以下事件：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">.blur() 表单元素失去焦点。</div><div class="line">.change() 表单元素的值发生变化</div><div class="line">.click() 鼠标单击</div><div class="line">.dblclick() 鼠标双击</div><div class="line">.focus() 表单元素获得焦点</div><div class="line">.focusin() 子元素获得焦点</div><div class="line">.focusout() 子元素失去焦点</div><div class="line">.hover() 同时为mouseenter和mouseleave事件指定处理函数</div><div class="line">.keydown() 按下键盘（长时间按键，只返回一个事件）</div><div class="line">.keypress() 按下键盘（长时间按键，将返回多个事件）</div><div class="line">.keyup() 松开键盘</div><div class="line">.load() 元素加载完毕</div><div class="line">.mousedown() 按下鼠标</div><div class="line">.mouseenter() 鼠标进入（进入子元素不触发）</div><div class="line">.mouseleave() 鼠标离开（离开子元素不触发）</div><div class="line">.mousemove() 鼠标在元素内部移动</div><div class="line">.mouseout() 鼠标离开（离开子元素也触发）</div><div class="line">.mouseover() 鼠标进入（进入子元素也触发）</div><div class="line">.mouseup() 松开鼠标</div><div class="line">.ready() DOM加载完成</div><div class="line">.resize() 浏览器窗口的大小发生改变</div><div class="line">.scroll() 滚动条的位置发生变化</div><div class="line">.select() 用户选中文本框中的内容</div><div class="line">.submit() 用户递交表单</div><div class="line">.toggle() 根据鼠标点击的次数，依次运行多个函数</div><div class="line">.unload() 用户离开页面</div></pre></td></tr></table></figure></p>
+<p>以上这些事件在jQuery内部，都是.bind()的便捷方式。使用.bind()可以更灵活地控制事件，比如为多个事件绑定同一个函数：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">$(&apos;input&apos;).bind(</div><div class="line">　　&apos;click change&apos;, //同时绑定click和change事件</div><div class="line">　　function() &#123;</div><div class="line">　　　　alert(&apos;Hello&apos;);</div><div class="line">　　&#125;</div><div class="line">);</div></pre></td></tr></table></figure></p>
+<p>有时，<strong>你只想让事件运行一次</strong>，这时可以使用.one()方法。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$(&quot;p&quot;).one(&quot;click&quot;, function() &#123;</div><div class="line">　　alert(&quot;Hello&quot;); //只运行一次，以后的点击不会运行</div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
+<p><strong>.unbind()用来解除事件绑定。</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$(&apos;p&apos;).unbind(&apos;click&apos;);</div></pre></td></tr></table></figure></p>
+<p>所有的事件处理函数，都可以接受一个事件对象（event object）作为参数，比如下面例子中的e：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$(&quot;p&quot;).click(function(e) &#123;</div><div class="line">　　alert(e.type); // &quot;click&quot;</div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
+<p>这个事件对象有一些很有用的属性和方法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">event.pageX 事件发生时，鼠标距离网页左上角的水平距离</div><div class="line">event.pageY 事件发生时，鼠标距离网页左上角的垂直距离</div><div class="line">event.type 事件的类型（比如click）</div><div class="line">event.which 按下了哪一个键</div><div class="line">event.data 在事件对象上绑定数据，然后传入事件处理函数</div><div class="line">event.target 事件针对的网页元素</div><div class="line">event.preventDefault() 阻止事件的默认行为（比如点击链接，会自动打开新页面）</div><div class="line">event.stopPropagation() 停止事件向上层元素冒泡</div></pre></td></tr></table></figure></p>
+<p>在事件处理函数中，<strong>可以用this关键字，返回事件针对的DOM元素：</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">$(&apos;a&apos;).click(function(e) &#123;</div><div class="line">　　if ($(this).attr(&apos;href&apos;).match(&apos;evil&apos;)) &#123; //如果确认为有害链接</div><div class="line">　　　　e.preventDefault(); //阻止打开</div><div class="line">　　　　$(this).addClass(&apos;evil&apos;); //加上表示有害的class</div><div class="line">　　&#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
+<p>有两种方法，可以<strong>自动触发一个事件。</strong><br><strong>一种是直接使用事件函数;<br>另一种是使用.trigger()或.triggerHandler()。</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">    $(&apos;a&apos;).click();</div><div class="line">    $(&apos;a&apos;).trigger(&apos;click&apos;);</div><div class="line">`</div></pre></td></tr></table></figure></p>
+<h3 id="九、特殊效果"><a href="#九、特殊效果" class="headerlink" title="九、特殊效果"></a>九、特殊效果</h3><p>最后，jQuery允许对象呈现某些<strong>特殊效果。</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$(&apos;h1&apos;).show(); //展现一个h1标题</div></pre></td></tr></table></figure></p>
+<p>常用的特殊效果如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">.fadeIn() 淡入</div><div class="line">.fadeOut() 淡出</div><div class="line">.fadeTo() 调整透明度</div><div class="line">.hide() 隐藏元素</div><div class="line">.show() 显示元素</div><div class="line">.slideDown() 向下展开</div><div class="line">.slideUp() 向上卷起</div><div class="line">.slideToggle() 依次展开或卷起某个元素</div><div class="line">.toggle() 依次展示或隐藏某个元素</div></pre></td></tr></table></figure></p>
+<p>除了.show()和.hide()，所有其他特效的默认执行时间都是400ms（毫秒），但是你可以改变这个设置。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$(&apos;h1&apos;).fadeIn(300); // 300毫秒内淡入</div><div class="line">$(&apos;h1&apos;).fadeOut(&apos;slow&apos;); // 缓慢地淡出</div></pre></td></tr></table></figure></p>
+<p>在特效结束后，可以指定执行某个函数。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">    $(&apos;p&apos;).fadeOut(300, function() &#123; $(this).remove(); &#125;);</div><div class="line">更复杂的特效，可以用.animate()自定义。</div><div class="line">    $(&apos;div&apos;).animate(</div><div class="line">    　　&#123;</div><div class="line">    　　　　left : &quot;+=50&quot;, //不断右移</div><div class="line">    　　　　opacity : 0.25 //指定透明度</div><div class="line">    　　&#125;,</div><div class="line">    　　300, // 持续时间</div><div class="line">    　　function() &#123; alert(&apos;done!&apos;); &#125; //回调函数</div><div class="line">    );</div></pre></td></tr></table></figure></p>
+<p><strong>.stop()和.delay()用来停止或延缓特效的执行。<br>$.fx.off如果设置为true，则关闭所有网页特效。</strong></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/programming/" rel="tag"># programming</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/posts/programming/2016-11-25-对表单序列化（serialize）的一些联想.html" rel="next" title="对表单序列化（serialize）的一些联想">
+                <i class="fa fa-chevron-left"></i> 对表单序列化（serialize）的一些联想
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.JPG"
+               alt="Chunxia Du" />
+          <p class="site-author-name" itemprop="name">Chunxia Du</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">6</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#【目录】"><span class="nav-number">1.</span> <span class="nav-text">【目录】</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#【正文】"><span class="nav-number">2.</span> <span class="nav-text">【正文】</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#一、选择网页元素"><span class="nav-number">2.1.</span> <span class="nav-text">一、选择网页元素</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#jQuery的基本设计思想和主要用法，就是”选择某个网页元素，然后对其进行某种操作”。这是它区别于其他Javascript库的根本特点。"><span class="nav-number">2.1.1.</span> <span class="nav-text">jQuery的基本设计思想和主要用法，就是”选择某个网页元素，然后对其进行某种操作”。这是它区别于其他Javascript库的根本特点。</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#二、改变结果集"><span class="nav-number">2.2.</span> <span class="nav-text">二、改变结果集</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#jQuery设计思想之二，就是提供各种强大的过滤器，对结果集进行筛选，缩小选择结果。"><span class="nav-number">2.2.1.</span> <span class="nav-text">jQuery设计思想之二，就是提供各种强大的过滤器，对结果集进行筛选，缩小选择结果。</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三、链式操作"><span class="nav-number">2.3.</span> <span class="nav-text">三、链式操作</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#jQuery设计思想之三，就是最终选中网页元素以后，可以对它进行一系列操作，并且所有操作可以连接在一起，以链条的形式写出来，比如："><span class="nav-number">2.3.1.</span> <span class="nav-text">jQuery设计思想之三，就是最终选中网页元素以后，可以对它进行一系列操作，并且所有操作可以连接在一起，以链条的形式写出来，比如：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#四、元素的操作：取值和赋值"><span class="nav-number">2.4.</span> <span class="nav-text">四、元素的操作：取值和赋值</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#jQuery设计思想之四，就是使用同一个函数，来完成取值（getter）和赋值（setter），即”取值器”与”赋值器”合一。到底是取值还是赋值，由函数的参数决定。"><span class="nav-number">2.4.1.</span> <span class="nav-text">jQuery设计思想之四，就是使用同一个函数，来完成取值（getter）和赋值（setter），即”取值器”与”赋值器”合一。到底是取值还是赋值，由函数的参数决定。</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#五、元素的操作：移动"><span class="nav-number">2.5.</span> <span class="nav-text">五、元素的操作：移动</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#jQuery设计思想之五，就是提供两组方法，来操作元素在网页中的位置移动。一组方法是直接移动该元素，另一组方法是移动其他元素，使得目标元素达到我们想要的位置。"><span class="nav-number">2.5.1.</span> <span class="nav-text">jQuery设计思想之五，就是提供两组方法，来操作元素在网页中的位置移动。一组方法是直接移动该元素，另一组方法是移动其他元素，使得目标元素达到我们想要的位置。</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#六、元素的操作：复制、删除和创建"><span class="nav-number">2.6.</span> <span class="nav-text">六、元素的操作：复制、删除和创建</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#七、工具方法"><span class="nav-number">2.7.</span> <span class="nav-text">七、工具方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#jQuery设计思想之六：除了对选中的元素进行操作以外，还提供一些与元素无关的工具方法（utility）。不必选中元素，就可以直接使用这些方法。"><span class="nav-number">2.7.1.</span> <span class="nav-text">jQuery设计思想之六：除了对选中的元素进行操作以外，还提供一些与元素无关的工具方法（utility）。不必选中元素，就可以直接使用这些方法。</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#八、事件操作"><span class="nav-number">2.8.</span> <span class="nav-text">八、事件操作</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#jQuery设计思想之七，就是把事件直接绑定在网页元素之上。"><span class="nav-number">2.8.1.</span> <span class="nav-text">jQuery设计思想之七，就是把事件直接绑定在网页元素之上。</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#九、特殊效果"><span class="nav-number">2.9.</span> <span class="nav-text">九、特殊效果</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chunxia Du</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
