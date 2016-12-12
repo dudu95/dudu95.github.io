@@ -1,0 +1,735 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="programming," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="Question：通过app.use(express.bodyParser())使用bodyParser这个中间件，在终端运行出问题，报错大概意思就是express4.14中已经没有bodyParser这个内置中间件了
+Node中的核心模块分两类：
+第一类是自带的核心模块，如http、fs、events等；
+第二类是第三方核心模块，express就是与http对应的第三方核心模块，用于处理http">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Nodejs之express第三方核心模块的中间件——body-parser">
+<meta property="og:url" content="http://yoursite.com/posts/programming/2016-12-12-Nodejs之express第三方核心模块的中间件——body-parser.html">
+<meta property="og:site_name" content="摆渡人">
+<meta property="og:description" content="Question：通过app.use(express.bodyParser())使用bodyParser这个中间件，在终端运行出问题，报错大概意思就是express4.14中已经没有bodyParser这个内置中间件了
+Node中的核心模块分两类：
+第一类是自带的核心模块，如http、fs、events等；
+第二类是第三方核心模块，express就是与http对应的第三方核心模块，用于处理http">
+<meta property="og:image" content="http://oh2pz5yqj.bkt.clouddn.com/image/bodyParser/bodyParser.png">
+<meta property="og:updated_time" content="2016-12-12T09:10:43.117Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Nodejs之express第三方核心模块的中间件——body-parser">
+<meta name="twitter:description" content="Question：通过app.use(express.bodyParser())使用bodyParser这个中间件，在终端运行出问题，报错大概意思就是express4.14中已经没有bodyParser这个内置中间件了
+Node中的核心模块分两类：
+第一类是自带的核心模块，如http、fs、events等；
+第二类是第三方核心模块，express就是与http对应的第三方核心模块，用于处理http">
+<meta name="twitter:image" content="http://oh2pz5yqj.bkt.clouddn.com/image/bodyParser/bodyParser.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/posts/programming/2016-12-12-Nodejs之express第三方核心模块的中间件——body-parser.html"/>
+
+
+
+
+
+  <title> Nodejs之express第三方核心模块的中间件——body-parser | 摆渡人 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">摆渡人</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">与你同行的人，比你要抵达的地方更重要。</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/posts/programming/2016-12-12-Nodejs之express第三方核心模块的中间件——body-parser.html">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Chunxia Du">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.JPG">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="摆渡人">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="摆渡人" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Nodejs之express第三方核心模块的中间件——body-parser
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-12-12T16:19:29+08:00">
+                2016-12-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/programming/" itemprop="url" rel="index">
+                    <span itemprop="name">编程</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="Question：通过app-use-express-bodyParser-使用bodyParser这个中间件，在终端运行出问题，报错大概意思就是express4-14中已经没有bodyParser这个内置中间件了"><a href="#Question：通过app-use-express-bodyParser-使用bodyParser这个中间件，在终端运行出问题，报错大概意思就是express4-14中已经没有bodyParser这个内置中间件了" class="headerlink" title="Question：通过app.use(express.bodyParser())使用bodyParser这个中间件，在终端运行出问题，报错大概意思就是express4.14中已经没有bodyParser这个内置中间件了"></a><strong>Question：通过<code>app.use(express.bodyParser())</code>使用bodyParser这个中间件，在终端运行出问题，报错大概意思就是express4.14中已经没有bodyParser这个内置中间件了</strong></h3><p><img src="http://oh2pz5yqj.bkt.clouddn.com/image/bodyParser/bodyParser.png" alt="运行错误图"></p>
+<h3 id="Node中的核心模块分两类："><a href="#Node中的核心模块分两类：" class="headerlink" title="Node中的核心模块分两类："></a><strong>Node中的核心模块分两类：</strong></h3><ul>
+<li>第一类是自带的核心模块，如http、fs、events等；</li>
+<li>第二类是第三方核心模块，express就是与http对应的第三方核心模块，用于处理http请求。</li>
+</ul>
+<p><strong>express在3.0版本中自带有很多中间件，但是在express 4.0以后，就将除static（静态文件处理）以外的其他中间件分离出来了。在4.0以后需要使用中间件时，就需要单独安装好相应的中间件以后调用，以下3.0与4.0中间件的中间件区别（3.0是内置中间件属性名，4.0是需要安装的中间件名称）：</strong></p>
+<table>
+<thead>
+<tr>
+<th>Express 3.0 Name</th>
+<th>Express 4.0 Name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>bodyParser</td>
+<td>body-parser</td>
+</tr>
+<tr>
+<td>compress</td>
+<td>compression</td>
+</tr>
+<tr>
+<td>cookieSession</td>
+<td>cookie-session</td>
+</tr>
+<tr>
+<td>logger</td>
+<td>morgan</td>
+</tr>
+<tr>
+<td>cookieParser</td>
+<td>cookie-parser</td>
+</tr>
+<tr>
+<td>session</td>
+<td>express-session</td>
+</tr>
+<tr>
+<td>favicon</td>
+<td>static-favicon</td>
+</tr>
+<tr>
+<td>response-time</td>
+<td>response-time</td>
+</tr>
+<tr>
+<td>error-handler</td>
+<td>errorhandler</td>
+</tr>
+<tr>
+<td>method-override</td>
+<td>method-override</td>
+</tr>
+<tr>
+<td>timeout</td>
+<td>connect-timeout</td>
+</tr>
+<tr>
+<td>vhost</td>
+<td>vhost</td>
+</tr>
+<tr>
+<td>csrf</td>
+<td>csurf</td>
+</tr>
+</tbody>
+</table>
+<p>经过看源代码下面的说明知道了body-parser的三种用法：<br>在讲用法之间，我们需要弄清楚下面<strong>四个不同的处理方法</strong></p>
+<h3 id="这四个处理方法分别对body的内容采用不同的处理方法。分别为："><a href="#这四个处理方法分别对body的内容采用不同的处理方法。分别为：" class="headerlink" title="这四个处理方法分别对body的内容采用不同的处理方法。分别为："></a>这四个处理方法分别对body的内容采用不同的处理方法。分别为：</h3><ul>
+<li>bodyParser.json(options)   处理json数据</li>
+<li>bodyParser.raw(options)   处理Buffer流数据</li>
+<li>bodyParser.text(options)   处理文本数据</li>
+<li>bodyParser.urlencoded(options)   处理UTF-8的编码的数据</li>
+</ul>
+<h3 id="以下是它的三种用法："><a href="#以下是它的三种用法：" class="headerlink" title="以下是它的三种用法："></a>以下是它的三种用法：</h3><h4 id="1、底层中间件用法：这将拦截和解析所有的请求；也即这种用法是全局的。"><a href="#1、底层中间件用法：这将拦截和解析所有的请求；也即这种用法是全局的。" class="headerlink" title="1、底层中间件用法：这将拦截和解析所有的请求；也即这种用法是全局的。"></a>1、底层中间件用法：这将拦截和解析所有的请求；也即这种用法是全局的。</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">var express = require(&apos;express&apos;)</div><div class="line">var bodyParser = require(&apos;body-parser&apos;)</div><div class="line"> </div><div class="line">var app = express()</div><div class="line"> </div><div class="line">// parse application/x-www-form-urlencoded</div><div class="line">app.use(bodyParser.urlencoded(&#123; extended: false &#125;))</div><div class="line"> </div><div class="line">// parse application/json</div><div class="line">app.use(bodyParser.json())</div><div class="line"> </div><div class="line">app.use(function (req, res) &#123;</div><div class="line">  res.setHeader(&apos;Content-Type&apos;, &apos;text/plain&apos;)</div><div class="line">  res.write(&apos;you posted:\n&apos;)</div><div class="line">  res.end(JSON.stringify(req.body, null, 2))</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<p><strong>express的use方法调用body-parser实例；且use方法没有设置路由路径；这样的body-parser实例就会对该app所有的请求进行拦截和解析。</strong></p>
+<h4 id="2、特定路由下的中间件用法：这种用法是针对特定路由下的特定请求的，只有请求该路由时，中间件才会拦截和解析该请求；也即这种用法是局部的；也是最常用的一个方式。"><a href="#2、特定路由下的中间件用法：这种用法是针对特定路由下的特定请求的，只有请求该路由时，中间件才会拦截和解析该请求；也即这种用法是局部的；也是最常用的一个方式。" class="headerlink" title="2、特定路由下的中间件用法：这种用法是针对特定路由下的特定请求的，只有请求该路由时，中间件才会拦截和解析该请求；也即这种用法是局部的；也是最常用的一个方式。"></a>2、特定路由下的中间件用法：这种用法是针对特定路由下的特定请求的，只有请求该路由时，中间件才会拦截和解析该请求；也即这种用法是局部的；也是最常用的一个方式。</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">var express = require(&apos;express&apos;)</div><div class="line">var bodyParser = require(&apos;body-parser&apos;)</div><div class="line"> </div><div class="line">var app = express()</div><div class="line"> </div><div class="line">// create application/json parser</div><div class="line">var jsonParser = bodyParser.json()</div><div class="line"> </div><div class="line">// create application/x-www-form-urlencoded parser</div><div class="line">var urlencodedParser = bodyParser.urlencoded(&#123; extended: false &#125;)</div><div class="line"> </div><div class="line">// POST /login gets urlencoded bodies</div><div class="line">app.post(&apos;/login&apos;, urlencodedParser, function (req, res) &#123;</div><div class="line">  if (!req.body) return res.sendStatus(400)</div><div class="line">  res.send(&apos;welcome, &apos; + req.body.username)</div><div class="line">&#125;)</div><div class="line"> </div><div class="line">// POST /api/users gets JSON bodies</div><div class="line">app.post(&apos;/api/users&apos;, jsonParser, function (req, res) &#123;</div><div class="line">  if (!req.body) return res.sendStatus(400)</div><div class="line">  // create user in req.body</div><div class="line">&#125;)</div></pre></td></tr></table></figure>
+<p><strong>express的post（或者get）方法调用body-parser实例；且该方法有设置路由路径；这样的body-parser实例就会对该post（或者get）的请求进行拦截和解析。</strong></p>
+<h4 id="3、设置Content-Type-属性；用于修改和设定中间件解析的body类容类型。"><a href="#3、设置Content-Type-属性；用于修改和设定中间件解析的body类容类型。" class="headerlink" title="3、设置Content-Type 属性；用于修改和设定中间件解析的body类容类型。"></a>3、设置Content-Type 属性；用于修改和设定中间件解析的body类容类型。</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">// parse various different custom JSON types as JSON</div><div class="line">app.use(bodyParser.json(&#123; type: &apos;application/*+json&apos; &#125;);</div><div class="line"></div><div class="line">// parse some custom thing into a Buffer</div><div class="line">app.use(bodyParser.raw(&#123; type: &apos;application/vnd.custom-type&apos; &#125;));</div><div class="line"></div><div class="line">// parse an HTML body into a string</div><div class="line">app.use(bodyParser.text(&#123; type: &apos;text/html&apos; &#125;));</div></pre></td></tr></table></figure>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/programming/" rel="tag"># programming</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/posts/programming/2016-12-07-jquery最佳实践.html" rel="next" title="jquery最佳实践">
+                <i class="fa fa-chevron-left"></i> jquery最佳实践
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.JPG"
+               alt="Chunxia Du" />
+          <p class="site-author-name" itemprop="name">Chunxia Du</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">8</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Question：通过app-use-express-bodyParser-使用bodyParser这个中间件，在终端运行出问题，报错大概意思就是express4-14中已经没有bodyParser这个内置中间件了"><span class="nav-number">1.</span> <span class="nav-text">Question：通过app.use(express.bodyParser())使用bodyParser这个中间件，在终端运行出问题，报错大概意思就是express4.14中已经没有bodyParser这个内置中间件了</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Node中的核心模块分两类："><span class="nav-number">2.</span> <span class="nav-text">Node中的核心模块分两类：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#这四个处理方法分别对body的内容采用不同的处理方法。分别为："><span class="nav-number">3.</span> <span class="nav-text">这四个处理方法分别对body的内容采用不同的处理方法。分别为：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#以下是它的三种用法："><span class="nav-number">4.</span> <span class="nav-text">以下是它的三种用法：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1、底层中间件用法：这将拦截和解析所有的请求；也即这种用法是全局的。"><span class="nav-number">4.1.</span> <span class="nav-text">1、底层中间件用法：这将拦截和解析所有的请求；也即这种用法是全局的。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2、特定路由下的中间件用法：这种用法是针对特定路由下的特定请求的，只有请求该路由时，中间件才会拦截和解析该请求；也即这种用法是局部的；也是最常用的一个方式。"><span class="nav-number">4.2.</span> <span class="nav-text">2、特定路由下的中间件用法：这种用法是针对特定路由下的特定请求的，只有请求该路由时，中间件才会拦截和解析该请求；也即这种用法是局部的；也是最常用的一个方式。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3、设置Content-Type-属性；用于修改和设定中间件解析的body类容类型。"><span class="nav-number">4.3.</span> <span class="nav-text">3、设置Content-Type 属性；用于修改和设定中间件解析的body类容类型。</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chunxia Du</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
