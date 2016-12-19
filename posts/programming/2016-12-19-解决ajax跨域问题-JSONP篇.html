@@ -1,0 +1,680 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="programming," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="什么是跨域？题目是解决ajax跨域问题-JSONP篇，那首先得了解什么是跨域，下面先讲讲什么是跨域跨域问题出现的根本原因就是：浏览器的同源策略当协议、子域名、主域名、端口号中任意一个不同时，都算做不同域不同域之间相互请求资源，即“跨域”
+JSON和JSONP了解了什么是跨域之后，那jsonp又是什么呢？它和json又有什么联系呢？
+JSON(JavaScript Object Notation)是">
+<meta property="og:type" content="article">
+<meta property="og:title" content="解决ajax跨域问题-JSONP篇">
+<meta property="og:url" content="http://yoursite.com/posts/programming/2016-12-19-解决ajax跨域问题-JSONP篇.html">
+<meta property="og:site_name" content="摆渡人">
+<meta property="og:description" content="什么是跨域？题目是解决ajax跨域问题-JSONP篇，那首先得了解什么是跨域，下面先讲讲什么是跨域跨域问题出现的根本原因就是：浏览器的同源策略当协议、子域名、主域名、端口号中任意一个不同时，都算做不同域不同域之间相互请求资源，即“跨域”
+JSON和JSONP了解了什么是跨域之后，那jsonp又是什么呢？它和json又有什么联系呢？
+JSON(JavaScript Object Notation)是">
+<meta property="og:image" content="http://oh2pz5yqj.bkt.clouddn.com/image/jsonp/%E8%B7%A8%E5%9F%9F.jpg">
+<meta property="og:updated_time" content="2016-12-19T10:38:18.407Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="解决ajax跨域问题-JSONP篇">
+<meta name="twitter:description" content="什么是跨域？题目是解决ajax跨域问题-JSONP篇，那首先得了解什么是跨域，下面先讲讲什么是跨域跨域问题出现的根本原因就是：浏览器的同源策略当协议、子域名、主域名、端口号中任意一个不同时，都算做不同域不同域之间相互请求资源，即“跨域”
+JSON和JSONP了解了什么是跨域之后，那jsonp又是什么呢？它和json又有什么联系呢？
+JSON(JavaScript Object Notation)是">
+<meta name="twitter:image" content="http://oh2pz5yqj.bkt.clouddn.com/image/jsonp/%E8%B7%A8%E5%9F%9F.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/posts/programming/2016-12-19-解决ajax跨域问题-JSONP篇.html"/>
+
+
+
+
+
+  <title> 解决ajax跨域问题-JSONP篇 | 摆渡人 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">摆渡人</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">与你同行的人，比你要抵达的地方更重要。</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/posts/programming/2016-12-19-解决ajax跨域问题-JSONP篇.html">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Chunxia Du">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.JPG">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="摆渡人">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="摆渡人" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                解决ajax跨域问题-JSONP篇
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-12-19T16:33:32+08:00">
+                2016-12-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/programming/" itemprop="url" rel="index">
+                    <span itemprop="name">编程</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="什么是跨域？"><a href="#什么是跨域？" class="headerlink" title="什么是跨域？"></a>什么是跨域？</h2><p>题目是解决ajax跨域问题-JSONP篇，那首先得了解什么是跨域，下面先讲讲什么是跨域<br><strong>跨域问题出现的根本原因就是：浏览器的同源策略</strong><br><img src="http://oh2pz5yqj.bkt.clouddn.com/image/jsonp/%E8%B7%A8%E5%9F%9F.jpg" alt="域名组成"><br><strong>当协议、子域名、主域名、端口号中任意一个不同时，都算做不同域<br>不同域之间相互请求资源，即“跨域”</strong></p>
+<h2 id="JSON和JSONP"><a href="#JSON和JSONP" class="headerlink" title="JSON和JSONP"></a>JSON和JSONP</h2><p>了解了什么是跨域之后，那jsonp又是什么呢？它和json又有什么联系呢？</p>
+<p><strong>JSON(JavaScript Object Notation)是一种轻量级的数据交换格式。它的书写格式是：键值对。<br>比如”name”:”摆渡人”</strong></p>
+<p><strong>JSONP是JSON with Padding的略称。它是一个非官方的协议，它允许在服务器端集成Script tags返回至客户端<br>通过javascript callback的形式实现跨域访问（这仅仅是JSONP简单的实现形式）。–来源百度</strong></p>
+<p>JSONP就像是JSON+Padding一样(Padding这里我们理解为填充)，我们先看下面的小例子然后再详细介绍。</p>
+<h2 id="跨域的简单原理"><a href="#跨域的简单原理" class="headerlink" title="跨域的简单原理"></a>跨域的简单原理</h2><p><strong>解释：这里我用的是ASP.NET MVC程序来讲解的</strong></p>
+<p>一、首先模拟一个跨越环境：<br>打开vs，新建两个MVC项目（默认控制器名称都为home，同时里面的Action都是index），分别为jsonp和jsonp2<br>同时启动这两个项目，你会发现它们的端口号是不一样（<code>假设jsonp是http://localhost:19936，jsonp2是http://localhost:19963</code>），那如上面所说，如果它们互相请求资源，即构成“跨域”</p>
+<p>二、模拟完跨域环境之后，<br>先在jsonp项目views/home/index.aspx文件中添加如下代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;script src=&quot;http://localhost:19963/Scripts/test.js&quot;&gt;&lt;/script&gt;</div></pre></td></tr></table></figure></p>
+<p>然后在jsonp2项目的Scripts目录下添加test.js文件，内容如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">alert(&quot;test&quot;);</div></pre></td></tr></table></figure></p>
+<p>这时启动jsonp项目，会弹出test的提示框</p>
+<p><strong>利用<code>&lt;script&gt;</code>标签的src属性并不被同源策略所约束这一特性，所以可以获取任何服务器上脚本并执行。这就是跨域访问的原理。</strong></p>
+<h2 id="JSONP的实现模式–CallBack"><a href="#JSONP的实现模式–CallBack" class="headerlink" title="JSONP的实现模式–CallBack"></a>JSONP的实现模式–CallBack</h2><p>刚才的小例子讲解了跨域的原理，那我们现在回上去再看看JSONP的定义说明中讲到了javascript callback的形式。那我们就来修改下代码，<strong>实现JSONP的javascript callback的形式。</strong></p>
+<p>修改jsonp项目views/home/index.aspx文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">&lt;script type=&quot;text/javascript&quot;&gt;</div><div class="line">	//回调函数</div><div class="line">	function callback(data) &#123;</div><div class="line">	    alert(data.message);</div><div class="line">	&#125;</div><div class="line">&lt;/script&gt;</div><div class="line">&lt;script type=&quot;text/javascript&quot; src=&quot;http://localhost:19963/Scripts/test.js&quot;&gt;&lt;/script&gt;</div></pre></td></tr></table></figure></p>
+<p>同时修改jsonp2项目中Scripts目录下的test.js文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">//调用callback函数，并以json数据形式作为阐述传递，完成回调</div><div class="line">callback(&#123;&quot;message&quot;:&quot;success&quot;&#125;);</div></pre></td></tr></table></figure></p>
+<p>这时启动jsonp项目，会弹出success的提示框</p>
+<p><strong>这其实就是JSONP的简单实现模式，或者说是JSONP的原型：创建一个回调函数，然后在远程服务上调用这个函数并且将JSON 数据形式作为参数传递，完成回调。</strong></p>
+<p><strong>将JSON数据填充进回调函数，这就是JSONP的JSON+Padding的含义吧。</strong></p>
+<p><strong>补充：</strong>这里的所有script脚本都是写在html body标签的最下面，这样写的好处是保证在执行js脚本的时候所有的DOM元素已加载完毕。</p>
+<p><strong>接下来我们自己来创建一个简单的远程服务，实现一个最基本的JSONP服务调用。</strong><br>修改jsonp2项目Controllers/homeController中的代码为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">public ActionResult Index()</div><div class="line">        &#123;</div><div class="line">            //获取回调函数名</div><div class="line">            string callback = &quot;person&quot;;</div><div class="line">              //json数据</div><div class="line">            string json = &quot;&#123;\&quot;name\&quot;:\&quot;dudu\&quot;,\&quot;sex\&quot;:\&quot;woman\&quot;&#125;&quot;;</div><div class="line">  </div><div class="line">            Response.ContentType = &quot;application/json&quot;;</div><div class="line">             //输出：回调函数名(json数据)</div><div class="line">            //Response.Write(callback + &quot;(&quot; + json + &quot;)&quot;);</div><div class="line">            //return View();</div><div class="line">            return Content(callback + &quot;(&quot; + json + &quot;)&quot;);</div><div class="line">        &#125;</div></pre></td></tr></table></figure></p>
+<p>接着修改jsonp项目views/home/index.aspx文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&lt;script&gt;</div><div class="line">function person(data) &#123;</div><div class="line">    alert(data.name + &quot; is a &quot; + data.sex);</div><div class="line">&#125;</div><div class="line">&lt;/script&gt;</div><div class="line">&lt;script src=&quot;http://localhost:19963/home/index?callback=person&quot;&gt;&lt;/script&gt;</div></pre></td></tr></table></figure></p>
+<p>这时启动jsonp项目，会弹出的提示框’dudu is a woman’的提示框</p>
+<p>这就完成了一个最基本的JSONP服务调用了，下面我们来了解下JQuery是如何调用JSONP的。</p>
+<h2 id="jQuery对JSONP的实现"><a href="#jQuery对JSONP的实现" class="headerlink" title="jQuery对JSONP的实现"></a>jQuery对JSONP的实现</h2><p>jquery中可以使用<code>$.getJSON(url,[data],[callback])</code>方法，（详细可以参考<a href="http://api.jquery.com/jQuery.getJSON/" target="_blank" rel="external">jquery api getJSON</a>）实现。<br>因为下面的例子没用用到向服务传参，所以只写了<code>getJSON(url,[callback]))</code><br>修改jsonp项目views/home/index.aspx文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$.getJSON(&quot;http://localhost:19963/home/index?callback=?&quot;, function (data) &#123;</div><div class="line">    alert(data.name + &quot; is a &quot; + data.sex);</div><div class="line">&#125;)</div></pre></td></tr></table></figure></p>
+<p><strong>结果是一样的，要注意的是在url的后面必须添加一个callback参数，这样getJSON方法才会知道是用JSONP方式去访问服务，callback后面的那个问号是内部自动生成的一个回调函数名。</strong>这个函数名大家可以debug一下看看，比如jQuery17207481773362960666_1332575486681。</p>
+<p>　　当然，如果说我们想指定自己的回调函数名，或者说服务上规定了固定回调函数名该怎么办呢？我们可以使用$.ajax方法来实现<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">$.ajax(&#123;</div><div class="line">    url: &quot;http://localhost:19963/home/index?callback=?&quot;,</div><div class="line">    dataType: &quot;jsonp&quot;,</div><div class="line">    jsonpCallback: &quot;person&quot;,</div><div class="line">    success: function (data) &#123;</div><div class="line">        alert(data.name + &quot; is a &quot; + data.sex);</div><div class="line">    &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
+<p><strong>这时，jsonpCallback指定了我们自己的回调方法名为person，远程服务接受callback参数的值就不再是自动生成的回调名，而是person。dataType是指定按照JSOPN方式访问远程服务。</strong></p>
+<p><strong>但是JSONP不支持POST请求，只支持GET请求。所以如果是POST请求，就不能用JSONP实现跨越请求了</strong></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/programming/" rel="tag"># programming</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/posts/programming/2016-12-12-Nodejs之express第三方核心模块的中间件——body-parser.html" rel="next" title="Nodejs之express第三方核心模块的中间件——body-parser">
+                <i class="fa fa-chevron-left"></i> Nodejs之express第三方核心模块的中间件——body-parser
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.JPG"
+               alt="Chunxia Du" />
+          <p class="site-author-name" itemprop="name">Chunxia Du</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">9</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是跨域？"><span class="nav-number">1.</span> <span class="nav-text">什么是跨域？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JSON和JSONP"><span class="nav-number">2.</span> <span class="nav-text">JSON和JSONP</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#跨域的简单原理"><span class="nav-number">3.</span> <span class="nav-text">跨域的简单原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JSONP的实现模式–CallBack"><span class="nav-number">4.</span> <span class="nav-text">JSONP的实现模式–CallBack</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#jQuery对JSONP的实现"><span class="nav-number">5.</span> <span class="nav-text">jQuery对JSONP的实现</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chunxia Du</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+	
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>

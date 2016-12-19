@@ -246,6 +246,167 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/posts/programming/2016-12-19-解决ajax跨域问题-JSONP篇.html">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Chunxia Du">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.JPG">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="摆渡人">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="摆渡人" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/posts/programming/2016-12-19-解决ajax跨域问题-JSONP篇.html" itemprop="url">
+                  解决ajax跨域问题-JSONP篇
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-12-19T16:33:32+08:00">
+                2016-12-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/programming/" itemprop="url" rel="index">
+                    <span itemprop="name">编程</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="什么是跨域？"><a href="#什么是跨域？" class="headerlink" title="什么是跨域？"></a>什么是跨域？</h2><p>题目是解决ajax跨域问题-JSONP篇，那首先得了解什么是跨域，下面先讲讲什么是跨域<br><strong>跨域问题出现的根本原因就是：浏览器的同源策略</strong><br><img src="http://oh2pz5yqj.bkt.clouddn.com/image/jsonp/%E8%B7%A8%E5%9F%9F.jpg" alt="域名组成"><br><strong>当协议、子域名、主域名、端口号中任意一个不同时，都算做不同域<br>不同域之间相互请求资源，即“跨域”</strong></p>
+<h2 id="JSON和JSONP"><a href="#JSON和JSONP" class="headerlink" title="JSON和JSONP"></a>JSON和JSONP</h2><p>了解了什么是跨域之后，那jsonp又是什么呢？它和json又有什么联系呢？</p>
+<p><strong>JSON(JavaScript Object Notation)是一种轻量级的数据交换格式。它的书写格式是：键值对。<br>比如”name”:”摆渡人”</strong></p>
+<p><strong>JSONP是JSON with Padding的略称。它是一个非官方的协议，它允许在服务器端集成Script tags返回至客户端<br>通过javascript callback的形式实现跨域访问（这仅仅是JSONP简单的实现形式）。–来源百度</strong></p>
+<p>JSONP就像是JSON+Padding一样(Padding这里我们理解为填充)，我们先看下面的小例子然后再详细介绍。</p>
+<h2 id="跨域的简单原理"><a href="#跨域的简单原理" class="headerlink" title="跨域的简单原理"></a>跨域的简单原理</h2><p><strong>解释：这里我用的是ASP.NET MVC程序来讲解的</strong></p>
+<p>一、首先模拟一个跨越环境：<br>打开vs，新建两个MVC项目（默认控制器名称都为home，同时里面的Action都是index），分别为jsonp和jsonp2<br>同时启动这两个项目，你会发现它们的端口号是不一样（<code>假设jsonp是http://localhost:19936，jsonp2是http://localhost:19963</code>），那如上面所说，如果它们互相请求资源，即构成“跨域”</p>
+<p>二、模拟完跨域环境之后，<br>先在jsonp项目views/home/index.aspx文件中添加如下代码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt;script src=&quot;http://localhost:19963/Scripts/test.js&quot;&gt;&lt;/script&gt;</div></pre></td></tr></table></figure></p>
+<p>然后在jsonp2项目的Scripts目录下添加test.js文件，内容如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">alert(&quot;test&quot;);</div></pre></td></tr></table></figure></p>
+<p>这时启动jsonp项目，会弹出test的提示框</p>
+<p><strong>利用<code>&lt;script&gt;</code>标签的src属性并不被同源策略所约束这一特性，所以可以获取任何服务器上脚本并执行。这就是跨域访问的原理。</strong></p>
+<h2 id="JSONP的实现模式–CallBack"><a href="#JSONP的实现模式–CallBack" class="headerlink" title="JSONP的实现模式–CallBack"></a>JSONP的实现模式–CallBack</h2><p>刚才的小例子讲解了跨域的原理，那我们现在回上去再看看JSONP的定义说明中讲到了javascript callback的形式。那我们就来修改下代码，<strong>实现JSONP的javascript callback的形式。</strong></p>
+<p>修改jsonp项目views/home/index.aspx文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">&lt;script type=&quot;text/javascript&quot;&gt;</div><div class="line">	//回调函数</div><div class="line">	function callback(data) &#123;</div><div class="line">	    alert(data.message);</div><div class="line">	&#125;</div><div class="line">&lt;/script&gt;</div><div class="line">&lt;script type=&quot;text/javascript&quot; src=&quot;http://localhost:19963/Scripts/test.js&quot;&gt;&lt;/script&gt;</div></pre></td></tr></table></figure></p>
+<p>同时修改jsonp2项目中Scripts目录下的test.js文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">//调用callback函数，并以json数据形式作为阐述传递，完成回调</div><div class="line">callback(&#123;&quot;message&quot;:&quot;success&quot;&#125;);</div></pre></td></tr></table></figure></p>
+<p>这时启动jsonp项目，会弹出success的提示框</p>
+<p><strong>这其实就是JSONP的简单实现模式，或者说是JSONP的原型：创建一个回调函数，然后在远程服务上调用这个函数并且将JSON 数据形式作为参数传递，完成回调。</strong></p>
+<p><strong>将JSON数据填充进回调函数，这就是JSONP的JSON+Padding的含义吧。</strong></p>
+<p><strong>补充：</strong>这里的所有script脚本都是写在html body标签的最下面，这样写的好处是保证在执行js脚本的时候所有的DOM元素已加载完毕。</p>
+<p><strong>接下来我们自己来创建一个简单的远程服务，实现一个最基本的JSONP服务调用。</strong><br>修改jsonp2项目Controllers/homeController中的代码为：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">public ActionResult Index()</div><div class="line">        &#123;</div><div class="line">            //获取回调函数名</div><div class="line">            string callback = &quot;person&quot;;</div><div class="line">              //json数据</div><div class="line">            string json = &quot;&#123;\&quot;name\&quot;:\&quot;dudu\&quot;,\&quot;sex\&quot;:\&quot;woman\&quot;&#125;&quot;;</div><div class="line">  </div><div class="line">            Response.ContentType = &quot;application/json&quot;;</div><div class="line">             //输出：回调函数名(json数据)</div><div class="line">            //Response.Write(callback + &quot;(&quot; + json + &quot;)&quot;);</div><div class="line">            //return View();</div><div class="line">            return Content(callback + &quot;(&quot; + json + &quot;)&quot;);</div><div class="line">        &#125;</div></pre></td></tr></table></figure></p>
+<p>接着修改jsonp项目views/home/index.aspx文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&lt;script&gt;</div><div class="line">function person(data) &#123;</div><div class="line">    alert(data.name + &quot; is a &quot; + data.sex);</div><div class="line">&#125;</div><div class="line">&lt;/script&gt;</div><div class="line">&lt;script src=&quot;http://localhost:19963/home/index?callback=person&quot;&gt;&lt;/script&gt;</div></pre></td></tr></table></figure></p>
+<p>这时启动jsonp项目，会弹出的提示框’dudu is a woman’的提示框</p>
+<p>这就完成了一个最基本的JSONP服务调用了，下面我们来了解下JQuery是如何调用JSONP的。</p>
+<h2 id="jQuery对JSONP的实现"><a href="#jQuery对JSONP的实现" class="headerlink" title="jQuery对JSONP的实现"></a>jQuery对JSONP的实现</h2><p>jquery中可以使用<code>$.getJSON(url,[data],[callback])</code>方法，（详细可以参考<a href="http://api.jquery.com/jQuery.getJSON/" target="_blank" rel="external">jquery api getJSON</a>）实现。<br>因为下面的例子没用用到向服务传参，所以只写了<code>getJSON(url,[callback]))</code><br>修改jsonp项目views/home/index.aspx文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$.getJSON(&quot;http://localhost:19963/home/index?callback=?&quot;, function (data) &#123;</div><div class="line">    alert(data.name + &quot; is a &quot; + data.sex);</div><div class="line">&#125;)</div></pre></td></tr></table></figure></p>
+<p><strong>结果是一样的，要注意的是在url的后面必须添加一个callback参数，这样getJSON方法才会知道是用JSONP方式去访问服务，callback后面的那个问号是内部自动生成的一个回调函数名。</strong>这个函数名大家可以debug一下看看，比如jQuery17207481773362960666_1332575486681。</p>
+<p>　　当然，如果说我们想指定自己的回调函数名，或者说服务上规定了固定回调函数名该怎么办呢？我们可以使用$.ajax方法来实现<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">$.ajax(&#123;</div><div class="line">    url: &quot;http://localhost:19963/home/index?callback=?&quot;,</div><div class="line">    dataType: &quot;jsonp&quot;,</div><div class="line">    jsonpCallback: &quot;person&quot;,</div><div class="line">    success: function (data) &#123;</div><div class="line">        alert(data.name + &quot; is a &quot; + data.sex);</div><div class="line">    &#125;</div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
+<p><strong>这时，jsonpCallback指定了我们自己的回调方法名为person，远程服务接受callback参数的值就不再是自动生成的回调名，而是person。dataType是指定按照JSOPN方式访问远程服务。</strong></p>
+<p><strong>但是JSONP不支持POST请求，只支持GET请求。所以如果是POST请求，就不能用JSONP实现跨越请求了</strong></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
   <link itemprop="mainEntityOfPage" href="http://yoursite.com/posts/programming/2016-12-12-Nodejs之express第三方核心模块的中间件——body-parser.html">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -945,145 +1106,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/posts/programming/2016-11-24-一个简单的使用ajax请求的前后端实现.html">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="Chunxia Du">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.JPG">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="摆渡人">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="摆渡人" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/posts/programming/2016-11-24-一个简单的使用ajax请求的前后端实现.html" itemprop="url">
-                  一个简单的使用ajax请求的前后端实现
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-11-24T11:53:15+08:00">
-                2016-11-24
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-              <span class="post-meta-divider">|</span>
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/programming/" itemprop="url" rel="index">
-                    <span itemprop="name">编程</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="该实例使用的后台是ASP-NET-MVC"><a href="#该实例使用的后台是ASP-NET-MVC" class="headerlink" title="该实例使用的后台是ASP.NET MVC"></a>该实例使用的后台是ASP.NET MVC</h2><h3 id="CheckUserNameController代码"><a href="#CheckUserNameController代码" class="headerlink" title="CheckUserNameController代码"></a>CheckUserNameController代码</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div></pre></td><td class="code"><pre><div class="line">public class CheckUserNameController : Controller</div><div class="line">&#123;</div><div class="line">   </div><div class="line">    // GET: /CheckUserName/</div><div class="line"></div><div class="line">    public ActionResult Index()</div><div class="line">    &#123;</div><div class="line">        return View();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public ActionResult Check()</div><div class="line">    &#123;</div><div class="line">        string userName = Request[&quot;UserName&quot;];</div><div class="line">        if(userName.Contains(&quot;tmd&quot;)||userName.Contains(&quot;尼玛&quot;))&#123;</div><div class="line">            return Content(&quot;forbid&quot;);</div><div class="line">        &#125;</div><div class="line">        int count = SqlHelper.ExecuteScalar(&quot;select count(*) from TableUser where UserName = @UserName&quot;, new SqlParameter(&quot;@UserName&quot;, userName));</div><div class="line"> </div><div class="line">        if (count &lt;= 0)</div><div class="line">        &#123;</div><div class="line">            return Content(&quot;ok&quot;);</div><div class="line">        &#125;</div><div class="line">        else &#123;</div><div class="line">            return Content(&quot;error&quot;);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public ActionResult ListAll()</div><div class="line">    &#123;</div><div class="line">        DataTable dt = SqlHelper.ExecuteDataTable(&quot;select * from TableUser&quot;);</div><div class="line">        List&lt;User&gt; users = new List&lt;User&gt;();</div><div class="line">        foreach(DataRow dr in dt.Rows)&#123;</div><div class="line">            User user = new User();</div><div class="line">            user.Id = (int)dr[&quot;Id&quot;];</div><div class="line">            user.UserName = (string)dr[&quot;UserName&quot;];</div><div class="line">            user.PassWord = (string)dr[&quot;PassWord&quot;];</div><div class="line">            users.Add(user);</div><div class="line">        &#125;</div><div class="line">        //这也是一种方法</div><div class="line">       // JavaScriptSerializer serializer = new JavaScriptSerializer();</div><div class="line">       // return Content(serializer.Serialize(users));</div><div class="line"></div><div class="line">        return Json(users, JsonRequestBehavior.AllowGet);</div><div class="line"></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h3 id="CheckUserNameController对应的view代码"><a href="#CheckUserNameController对应的view代码" class="headerlink" title="CheckUserNameController对应的view代码"></a>CheckUserNameController对应的view代码</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">html</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">head</span> <span class="attr">runat</span>=<span class="string">"server"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">"viewport"</span> <span class="attr">content</span>=<span class="string">"width=device-width"</span> /&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>Index<span class="tag">&lt;/<span class="name">title</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">div</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">label</span>&gt;</span>用户名：<span class="tag">&lt;/<span class="name">label</span>&gt;</span><span class="tag">&lt;<span class="name">input</span> <span class="attr">id</span>=<span class="string">"userName"</span> <span class="attr">type</span>=<span class="string">"text"</span> /&gt;</span><span class="tag">&lt;<span class="name">label</span> <span class="attr">id</span>=<span class="string">"lab"</span>&gt;</span><span class="tag">&lt;/<span class="name">label</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">label</span>&gt;</span>密码：<span class="tag">&lt;/<span class="name">label</span>&gt;</span><span class="tag">&lt;<span class="name">input</span> <span class="attr">id</span>=<span class="string">"passWord"</span> <span class="attr">type</span>=<span class="string">"password"</span> /&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"button"</span> <span class="attr">value</span>=<span class="string">"查看所有信息"</span> <span class="attr">id</span>=<span class="string">"btn"</span> /&gt;</span></div><div class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">"text/javascript"</span> <span class="attr">src</span>=<span class="string">"../ajax.js"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="javascript"></span></div><div class="line">        <span class="keyword">var</span> userName = <span class="built_in">document</span>.getElementById(<span class="string">'userName'</span>);</div><div class="line">        <span class="keyword">var</span> lab = <span class="built_in">document</span>.getElementById(<span class="string">'lab'</span>);</div><div class="line"></div><div class="line">        userName.onblur = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">            <span class="keyword">var</span> httpReq = <span class="keyword">new</span> XMLHttpRequest();</div><div class="line">            httpReq.open(<span class="string">'POST'</span>, <span class="string">'Check?UserName='</span>+userName.value, <span class="literal">true</span>);</div><div class="line">           </div><div class="line">            httpReq.onreadystatechange = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">                <span class="keyword">if</span> (httpReq.readyState === <span class="number">4</span>) &#123;</div><div class="line">                    <span class="keyword">if</span> (httpReq.status === <span class="number">200</span>) &#123;</div><div class="line">                        <span class="keyword">if</span> (httpReq.responseText == <span class="string">'ok'</span>) &#123;</div><div class="line">                            lab.style.color = <span class="string">"green"</span>;</div><div class="line">                            lab.innerHTML = <span class="string">'ok'</span>;</div><div class="line">                        &#125;</div><div class="line">                        <span class="keyword">else</span> <span class="keyword">if</span> (httpReq.responseText == <span class="string">"forbid"</span>) &#123;</div><div class="line">                            lab.style.color = <span class="string">"red"</span>;</div><div class="line">                            lab.innerHTML = <span class="string">"forbid"</span>;</div><div class="line">                        &#125;</div><div class="line">                        <span class="keyword">else</span> &#123;</div><div class="line">                            lab.style.color = <span class="string">"red"</span>;</div><div class="line">                            lab.innerHTML = <span class="string">"已存在该用户"</span>;</div><div class="line">                        &#125;</div><div class="line">                    &#125;</div><div class="line">                    <span class="keyword">else</span> &#123;</div><div class="line">                        alert(httpReq.status);</div><div class="line">                        alert(httpReq.responseText);</div><div class="line">                    &#125;</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">            httpReq.send();</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="built_in">document</span>.getElementById(<span class="string">"btn"</span>).onclick = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">        	<span class="comment">//这是调用的下面自己封装的ajax插件</span></div><div class="line">            ajax(<span class="string">"POST"</span>, <span class="string">"ListAll"</span>, <span class="function"><span class="keyword">function</span> (<span class="params">resText</span>) </span>&#123;</div><div class="line">                <span class="keyword">var</span> users = <span class="built_in">JSON</span>.parse(resText);</div><div class="line">                <span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; users.length; i++) &#123;</div><div class="line">                    alert(<span class="string">"username:"</span> + users[i].UserName + <span class="string">",Password:"</span> + users[i].PassWord);</div><div class="line">                &#125;</div><div class="line">            &#125;)</div><div class="line">        &#125;</div><div class="line">        </div><div class="line">        </div><div class="line">    <span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></div></pre></td></tr></table></figure>
-<h3 id="附带一个用原生js封装好的ajax插件"><a href="#附带一个用原生js封装好的ajax插件" class="headerlink" title="附带一个用原生js封装好的ajax插件"></a>附带一个用原生js封装好的ajax插件</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">function</span> <span class="title">ajax</span>(<span class="params">type, url, onsuccess,data</span>) </span>&#123;</div><div class="line">	<span class="keyword">var</span> data = data;</div><div class="line">    <span class="keyword">var</span> xmlHttp = <span class="built_in">window</span>.XMLHttpRequest ? <span class="keyword">new</span> XMLHttpRequest() : <span class="keyword">new</span> ActiveXObject(<span class="string">"Microsoft.XMLHTTP"</span>);</div><div class="line">    xmlHttp.open(type, url, <span class="literal">true</span>);</div><div class="line">    <span class="keyword">if</span>(data==<span class="literal">null</span>)&#123;</div><div class="line">		xmlHttp.send();</div><div class="line">	&#125;</div><div class="line">    <span class="keyword">else</span>&#123;</div><div class="line">		xmlHttp.send(data);</div><div class="line">	&#125;</div><div class="line">    xmlHttp.onreadystatechange = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</div><div class="line">        <span class="keyword">if</span> (xmlHttp.readyState === <span class="number">4</span>) &#123;</div><div class="line">            <span class="keyword">if</span> (xmlHttp.status === <span class="number">200</span>) &#123;</div><div class="line">                onsuccess(xmlHttp.responseText);</div><div class="line">            &#125; <span class="keyword">else</span> &#123;</div><div class="line">                alert(xmlHttp.status);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h3 id="运行程序步骤（CheckUserName-index）"><a href="#运行程序步骤（CheckUserName-index）" class="headerlink" title="运行程序步骤（CheckUserName/index）"></a>运行程序步骤（CheckUserName/index）</h3><h4 id="1-当输入“用户名”文本框失焦后，发送一个ajax请求，判断用户名是否可用"><a href="#1-当输入“用户名”文本框失焦后，发送一个ajax请求，判断用户名是否可用" class="headerlink" title="1. 当输入“用户名”文本框失焦后，发送一个ajax请求，判断用户名是否可用"></a>1. 当输入“用户名”文本框失焦后，发送一个ajax请求，判断用户名是否可用</h4><h4 id="2-当点击“查看所有信息”按钮后，发送另外一个ajax请求，获取所有信息"><a href="#2-当点击“查看所有信息”按钮后，发送另外一个ajax请求，获取所有信息" class="headerlink" title="2. 当点击“查看所有信息”按钮后，发送另外一个ajax请求，获取所有信息"></a>2. 当点击“查看所有信息”按钮后，发送另外一个ajax请求，获取所有信息</h4><h3 id="附录"><a href="#附录" class="headerlink" title="*附录"></a>*附录</h3><h4 id="HTTP状态码常用的状态码"><a href="#HTTP状态码常用的状态码" class="headerlink" title="HTTP状态码常用的状态码"></a>HTTP状态码常用的状态码</h4><p><strong>一、200状态码：</strong><br>成功2××： 成功处理了请求的状态码。<br>1、200 ：服务器已成功处理了请求并提供了请求的网页。<br>2、204： 服务器成功处理了请求，但没有返回任何内容。<br><strong>二、300状态码：</strong><br>重定向3×× ：每次请求中使用重定向不要超过 5 次。<br>1、301： 请求的网页已永久移动到新位置。当URLs发生变化时，使用301代码。搜索引擎索引中保存新的URL。<br>2、302： 请求的网页临时移动到新位置。搜索引擎索引中保存原来的URL。<br><strong>三、400状态码：</strong><br>客户端错误4×× ：表示请求可能出错，妨碍了服务器的处理。<br>400 (Bad Request/错误请求)<br>400 (SC_BAD_REQUEST)指出客户端请求中的语法错误。<br>401 (Unauthorized/未授权)<br>401 (SC_UNAUTHORIZED)表示客户端在授权头信息中没有有效的身份信息时访问受到密码保护的页面。这个响应必须包含一个WWW-Authenticate的授权信息头。例如，在本书4.5部分中的“Restricting Access to Web Pages./限制访问Web页。”<br>403 (Forbidden/禁止)<br>403 (SC_FORBIDDEN)的意思是除非拥有授权否则服务器拒绝提供所请求的资源。这个状态经常会由于服务器上的损坏文件或目录许可而引起。<br>404 (Not Found/未找到)<br>404 (SC_NOT_FOUND)状态每个网络程序员可能都遇到过，他告诉客户端所给的地址无法找到任何资源。它是表示“没有所访问页面”的标准方式。<br><strong>四、500状态码：</strong><br>服务器错误5×× ：表示服务器在处理请求时发生内部错误。这些错误可能是服务器本身的错误，而不是请求出错。<br>1、500 ：服务器遇到错误，无法完成请求。<br>2、503： 服务器目前无法使用（由于超载或停机维护）。<br><strong>了解了http状态码在SEO中就比较好分析网站。</strong></p>
-<h4 id="5种readystate状态"><a href="#5种readystate状态" class="headerlink" title="5种readystate状态"></a>5种readystate状态</h4><p><img src="http://oh2pz5yqj.bkt.clouddn.com/image/readystate/ajax%E4%B8%AD%E7%9A%84readystate.png" alt="readystate"></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1129,7 +1151,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">8</span>
+              <span class="site-state-item-count">9</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
