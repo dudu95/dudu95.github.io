@@ -246,6 +246,190 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://yoursite.com/posts/programming/2017-02-17-javascript之立即执行函数.html">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Chunxia Du">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.JPG">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="摆渡人">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="摆渡人" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/posts/programming/2017-02-17-javascript之立即执行函数.html" itemprop="url">
+                  javascript之立即执行函数
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-02-17T15:00:34+08:00">
+                2017-02-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/programming/" itemprop="url" rel="index">
+                    <span itemprop="name">编程</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>( function(){…} )()和( function (){…} () )是两种javascript立即执行函数的常见写法，但对于为什么这样写，却一直很迷惑。<br>下面是我通过查询资料得出的一些见解。<br>函数声明、函数表达式、匿名函数<br>要想理解什么是立即执行函数，首先我们先来了解一些函数的基本概念。<br>函数声明：function fnName() {…};使用function关键字声明一个函数，再指定一个函数名，叫函数声明。<br>函数表达式 var fnName = function () {…};使用function关键字声明一个函数，但未给函数命名，最后将匿名函数赋予一个变量，叫函数表达式，这是最常见的函数表达式语法形式。<br>匿名函数：function () {}; 使用function关键字声明一个函数，但未给函数命名，所以叫匿名函数，匿名函数属于函数表达式，匿名函数有很多作用，赋予一个变量则创建函数，赋予一个事件则成为事件处理程序或创建闭包等等。<br>函数声明和函数表达式不同之处有两点：<br>一、Javascript引擎在解析javascript代码时会“函数声明提升”（Function declaration Hoisting）当前执行环境（作用域）上的函数声明；而函数表达式必须等到Javascirtp引擎执行到它所在行时，才会从上而下一行一行地解析函数表达式。<br>二、函数表达式后面可以加括号立即调用该函数；而函数声明不可以，只能以fnName()形式调用 。<br>以下是两者差别的例子：<br>fnName();<br>function fnName(){<br>    …<br>}<br>//正常，因为‘提升’了函数声明，函数调用可在函数声明之前</p>
+<p>fnName();<br>var fnName=function(){<br>    …<br>}<br>//报错，变量fnName还未保存对函数的引用，函数调用必须在函数表达式之后</p>
+<p>var fnName=function(){<br>    alert(‘Hello World’);<br>}();<br>//函数表达式后面加括号，当javascript引擎解析到此处时能立即调用函数<br>function fnName(){<br>    alert(‘Hello World’);<br>}();<br>//不会报错，但是javascript引擎只解析函数声明，忽略后面的括号，函数声明不会被调用<br>function(){<br>    console.log(‘Hello World’);<br>}();<br>//语法错误，虽然匿名函数属于函数表达式，但是未进行赋值操作，<br>//所以javascript引擎将开头的function关键字当做函数声明，报错：要求需要一个函数名</p>
+<p>在理解了一些函数基本概念后，回头看看( function(){…} )()和( function (){…} () )这两种立即执行函数的写法就能明白，要在函数体后面加括号就能立即调用，则这个函数必须是函数表达式，不能是函数声明。</p>
+<p>了解了立即执行函数的写法之后，我们再来了解一下立即执行函数的作用。<br>考虑一下下面这种常见的场景：<br>你的代码在页面代码加载完成之后，不得不执行一些设置工作，比如附加时间处理器，创建对象等等，<br>所有的这些工作只需要执行一次，所以没有理由创建一个可复用的命名的函数；<br>但这些代码也需要一些临时的变量，但初始化过程结束后，就再也不会被用到了，<br>所以将这些变量作为全局变量不是个好主意，所以我们需要立即执行函数——去将我们所有的代码包裹在它的局部作用域中，不会让任何变量泄露成全局变量；<br>(function() {<br>    var days = [‘Sun’, ‘Mon’, ‘Tue’, ‘Wed’, ‘Thu’, ‘Fri’, ‘Sat’],<br>    today = new Date(),<br>    msg = ‘Today is ‘ + days[today.getDay()] + ‘, ‘ + today.getDate();<br>    alert(msg);<br>} ()); // “Today is Fri, 17” </p>
+<p>立即执行函数的应用:<br>应用一、解决循环闭包的问题</p>
+<pre><code>&lt;div id=&quot;box&quot;&gt;
+    &lt;div id=&quot;div1&quot;&gt;aaa&lt;/div&gt;
+    &lt;div id=&quot;div2&quot;&gt;bbb&lt;/div&gt;
+    &lt;div id=&quot;div3&quot;&gt;ccc&lt;/div&gt;
+&lt;/div&gt;
+
+for(var i=1;i&lt;4;i++){
+    document.getElementById(&quot;div&quot;+i).addEventListener(&apos;click&apos;, function() {
+        alert(i);
+    })
+};     //总是4
+
+解决办法：
+for(var i=1;i&lt;4;i++){
+    !function (i) {
+        document.getElementById(&quot;div&quot;+i).addEventListener(&apos;click&apos;, function() {
+            alert(i);
+        })
+    }(i)
+}   //使用索引的道理也是一样的
+
+补充：还可以使用事件代理实现
+document.getElementById(&apos;box&apos;).addEventListener(&apos;click&apos;,function(e){
+    console.log(e.target.id.substring(3));
+})
+</code></pre><p>应用二、模块化<br>使用“立即执行函数”（IIFE），将相关的属性和方法封装在一个函数作用域里面，可以达到不暴露私有成员的目的。</p>
+<p>var module1 = (function () {<br>　var _count = 0;<br>　var m1 = function () {<br>　  //…<br>　};<br>　var m2 = function () {<br>　　//…<br>　};<br>　return {<br>　　m1 : m1,<br>　　m2 : m2<br>　};<br>})();<br>使用上面的写法，外部代码无法读取内部的_count变量。</p>
+<p>console.info(module1._count); //undefined<br>上面的module1就是JavaScript模块的基本写法。</p>
+<p>如果一个模块很大，必须分成几个部分，或者一个模块需要继承另一个模块，这时就有必要采用“放大模式”（augmentation）。</p>
+<p>var module1 = (function (mod){<br>　mod.m3 = function () {<br>　　//…<br>　};<br>　return mod;<br>})(module1);<br>上面的代码为module1模块添加了一个新方法m3()，然后返回新的module1模块。</p>
+<p>在浏览器环境中，模块的各个部分通常都是从网上获取的，有时无法知道哪个部分会先加载。如果采用上面的写法，第一个执行的部分有可能加载一个不存在空对象，这时就要采用”宽放大模式”（Loose augmentation）。</p>
+<p>var module1 = ( function (mod){<br>　//…<br>　return mod;<br>})(window.module1 || {});<br>与”放大模式”相比，“宽放大模式”就是“立即执行函数”的参数可以是空对象。</p>
+<p>独立性是模块的重要特点，模块内部最好不与程序的其他部分直接交互。</p>
+<p>为了在模块内部调用全局变量，必须显式地将其他变量输入模块。</p>
+<p>var module1 = (function ($, YAHOO) {<br>　//…<br>})(jQuery, YAHOO);<br>上面的module1模块需要使用jQuery库和YUI库，就把这两个库（其实是两个模块）当作参数输入module1。这样做除了保证模块的独立性，还使得模块之间的依赖关系变得明显。</p>
+<p>立即执行函数还可以起到命名空间的作用。</p>
+<p>(function($, window, document) {</p>
+<p>  function go(num) {<br>  }</p>
+<p>  function handleEvents() {<br>  }</p>
+<p>  function initialize() {<br>  }</p>
+<p>  function dieCarouselDie() {<br>  }</p>
+<p>  //attach to the global scope<br>  window.finalCarousel = {<br>    init : initialize,<br>    destroy : dieCouraselDie<br>  }</p>
+<p>})( jQuery, window, document );<br>上面代码中，finalCarousel对象输出到全局，对外暴露init和destroy接口，内部方法go、handleEvents、initialize、dieCarouselDie都是外部无法调用的。</p>
+<p>参考链接：阮一峰的javascript标准参考教程、深入理解javascript中的立即执行函数</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
   <link itemprop="mainEntityOfPage" href="http://yoursite.com/posts/programming/2016-12-19-解决ajax跨域问题-JSONP篇.html">
 
   <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -955,157 +1139,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-  <link itemprop="mainEntityOfPage" href="http://yoursite.com/posts/programming/2016-11-25-对表单序列化（serialize）的一些联想.html">
-
-  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="Chunxia Du">
-    <meta itemprop="description" content="">
-    <meta itemprop="image" content="/images/avatar.JPG">
-  </span>
-
-  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-    <meta itemprop="name" content="摆渡人">
-    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
-      <img style="display:none;" itemprop="url image" alt="摆渡人" src="">
-    </span>
-  </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/posts/programming/2016-11-25-对表单序列化（serialize）的一些联想.html" itemprop="url">
-                  对表单序列化（serialize）的一些联想
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-11-25T11:01:03+08:00">
-                2016-11-25
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category" >
-              <span class="post-meta-divider">|</span>
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/programming/" itemprop="url" rel="index">
-                    <span itemprop="name">编程</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="表单序列化"><a href="#表单序列化" class="headerlink" title="表单序列化"></a>表单序列化</h2><h3 id="jQuery有两个方法-serializeArray-与-serialize"><a href="#jQuery有两个方法-serializeArray-与-serialize" class="headerlink" title="jQuery有两个方法 .serializeArray() 与.serialize()."></a>jQuery有两个方法 .serializeArray() 与.serialize().</h3><ul>
-<li><h4 id="serializeArray-返回-Array"><a href="#serializeArray-返回-Array" class="headerlink" title=".serializeArray()返回: Array"></a>.serializeArray()返回: Array</h4><p><strong>描述:</strong> 将用作提交的表单元素的值编译成<strong>拥有name和value对象组成的数组</strong>。<br>如<strong><code>[ { name: a  value: 1 }, { name: b  value: 2 },…]</code></strong><br>一般用于Ajax <strong>POST</strong></p>
-</li>
-<li><h4 id="serialize-返回-String"><a href="#serialize-返回-String" class="headerlink" title=".serialize()返回: String"></a>.serialize()返回: String</h4><p><strong>描述：</strong> 将用作提交的表单元素的值编译成<strong>字符串</strong>。<br>如：<strong><code>single=Single&amp;multiple=Multiple1&amp;multiple=Multiple3&amp;check=check2&amp;radio=radio1</code></strong><br>一般用于<strong>GET</strong></p>
-</li>
-</ul>
-<h3 id="具体讨论serializeArray-与serialize-如下："><a href="#具体讨论serializeArray-与serialize-如下：" class="headerlink" title="具体讨论serializeArray()与serialize()如下："></a>具体讨论serializeArray()与serialize()如下：</h3><h4 id="1-对于简单的表单提交（不涉及到checkbox，select等），用serialize-问题不大"><a href="#1-对于简单的表单提交（不涉及到checkbox，select等），用serialize-问题不大" class="headerlink" title="1. 对于简单的表单提交（不涉及到checkbox，select等），用serialize()问题不大"></a>1. 对于简单的表单提交<strong>（不涉及到checkbox，select等）</strong>，用serialize()问题不大</h4><p>这时，序列化和反序列化都很简单<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">**<span class="comment">//序列化**</span></div><div class="line"><span class="keyword">var</span> data = $(<span class="string">'#form'</span>).serialize();</div><div class="line"><span class="built_in">console</span>.log(data)<span class="comment">//=&gt; 'name=val&amp;age=val&amp;gender=val&amp;fruit=apple&amp;fruit=banana'</span></div><div class="line"> </div><div class="line">**<span class="comment">//反序列化**</span></div><div class="line"><span class="keyword">var</span> data = <span class="string">'name=val&amp;age=val&amp;gender=val&amp;fruit=apple&amp;fruit=banana'</span>;</div><div class="line">data.split(<span class="string">'&amp;'</span>).forEach(<span class="function"><span class="keyword">function</span>(<span class="params">param</span>)</span>&#123;</div><div class="line">  param = param.split(<span class="string">'='</span>);</div><div class="line">  <span class="keyword">var</span> name = param[<span class="number">0</span>],</div><div class="line">      value = param[<span class="number">1</span>];</div><div class="line">  $(<span class="string">'#form [name='</span> + name + <span class="string">']'</span>).val(value);</div><div class="line">&#125;)</div></pre></td></tr></table></figure></p>
-<h4 id="2-但是如果表单在有多选的情况下，serialize-和serializeArray-显然都会出现问题"><a href="#2-但是如果表单在有多选的情况下，serialize-和serializeArray-显然都会出现问题" class="headerlink" title="2. 但是如果表单在有多选的情况下，serialize()和serializeArray()显然都会出现问题"></a>2. 但是如果表单在有多选的情况下，serialize()和serializeArray()显然都会出现问题</h4><ul>
-<li><h5 id="对于serialize-思路是对name相同的情况进行相应的判断，这里不细论；"><a href="#对于serialize-思路是对name相同的情况进行相应的判断，这里不细论；" class="headerlink" title="对于serialize(),思路是对name相同的情况进行相应的判断，这里不细论；"></a>对于serialize(),思路是对name相同的情况进行相应的判断，这里不细论；</h5></li>
-<li><h5 id="对于serializeArray-方法"><a href="#对于serializeArray-方法" class="headerlink" title="对于serializeArray()方法"></a>对于serializeArray()方法</h5>比如<strong>select,checkbox。</strong>此时返回的是：<br><strong><code>[{multiple:Multiple1},{multiple:Multiple3},{check:check1}},{check:check2}]</code></strong><br>而我们期望的是：<br><strong><code>[{multiple:[Multiple,Multiple3]},{check:[check1,check2]}]</code></strong><br>而且我们通过ajax提交的请求数据根对象期望是<strong>json对象</strong>而不是直接的<strong>json数组</strong>。</li>
-</ul>
-<p>这时，可以对serializeArray()进行一个简单的封装<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> serialize = <span class="function"><span class="keyword">function</span>(<span class="params">form</span>)</span>&#123;</div><div class="line">    <span class="keyword">var</span> $form = (<span class="keyword">typeof</span>(form)==<span class="string">"string"</span> ? $(<span class="string">"#"</span>+form) : form);</div><div class="line">    <span class="keyword">var</span> dataArray =  $form.serializeArray();</div><div class="line">    <span class="keyword">var</span> result=&#123;&#125;;</div><div class="line">    $(dataArray).each(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">        <span class="comment">//如果在结果对象中存在这个值，那么就说明是多选的情形。</span></div><div class="line">        <span class="keyword">if</span>(result[<span class="keyword">this</span>.name])&#123;</div><div class="line">            <span class="comment">//多选的情形，值是数组，直接push</span></div><div class="line">            result[<span class="keyword">this</span>.name].push(<span class="keyword">this</span>.value);</div><div class="line">        &#125;<span class="keyword">else</span>&#123;</div><div class="line">            <span class="comment">//获取当前表单控件元素</span></div><div class="line">            <span class="keyword">var</span> element = $form.find(<span class="string">"[name='"</span>+ <span class="keyword">this</span>.name +<span class="string">"']"</span>)[<span class="number">0</span>];</div><div class="line">            <span class="comment">//获取当前控件类型</span></div><div class="line">            <span class="keyword">var</span> type = ( element.type || element.nodeName ).toLowerCase();</div><div class="line">            <span class="comment">//如果控件类型为多选那么值就是数组形式，否则就是单值形式。</span></div><div class="line">            result[<span class="keyword">this</span>.name] = (<span class="regexp">/^(select-multiple|checkbox)$/i</span>).test(type) ? [<span class="keyword">this</span>.value] : <span class="keyword">this</span>.value;</div><div class="line">          &#125;</div><div class="line">    &#125;);</div><div class="line">    <span class="keyword">return</span> result;</div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
-<h4 id="结果对比："><a href="#结果对比：" class="headerlink" title="结果对比："></a>结果对比：</h4><h5 id="serializeArray的输入界面："><a href="#serializeArray的输入界面：" class="headerlink" title="serializeArray的输入界面："></a>serializeArray的输入界面：</h5><p><img src="http://oh2pz5yqj.bkt.clouddn.com/image/serialize/serializeArrayUI.png" alt="serializeArray的输入界面"></p>
-<h5 id="serializeArray的输出效果："><a href="#serializeArray的输出效果：" class="headerlink" title="serializeArray的输出效果："></a>serializeArray的输出效果：</h5><p><img src="http://oh2pz5yqj.bkt.clouddn.com/image/serialize/serializeArrayResult.png" alt="serializeArray的输出效果"></p>
-<h5 id="封装的serialize输入界面："><a href="#封装的serialize输入界面：" class="headerlink" title="封装的serialize输入界面："></a>封装的serialize输入界面：</h5><p><img src="http://oh2pz5yqj.bkt.clouddn.com/image/serialize/%E5%B0%81%E8%A3%85serializeUI.png" alt="封装的serialize输入界面"></p>
-<h5 id="封装的serialize输出效果："><a href="#封装的serialize输出效果：" class="headerlink" title="封装的serialize输出效果："></a>封装的serialize输出效果：</h5><p><img src="http://oh2pz5yqj.bkt.clouddn.com/image/serialize/%E5%B0%81%E8%A3%85serializeResult.png" alt="封装的serialize输出效果"></p>
-<h2 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h2><h3 id="nodejs中的序列化与反序列化"><a href="#nodejs中的序列化与反序列化" class="headerlink" title="nodejs中的序列化与反序列化"></a>nodejs中的序列化与反序列化</h3><p><img src="http://oh2pz5yqj.bkt.clouddn.com/image/serialize/nodejsQuerystring.png" alt="nodejs中的序列化与反序列化"></p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1151,7 +1184,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">9</span>
+              <span class="site-state-item-count">10</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1208,7 +1241,7 @@
         <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2016</span>
+  <span itemprop="copyrightYear">2017</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
